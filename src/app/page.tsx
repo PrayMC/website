@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BarChart3 } from "lucide-react";
+import { BarChart3, Globe } from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -35,7 +35,7 @@ export default function HomePage() {
           desc="커뮤니티 참여"
           external
         />
-        <NavCard href="https://planetearth.kr" icon={<Image src="/logo.png" alt="" width={20} height={20} className="w-5 h-5" />} title="PlanetEarth" desc="공식 사이트" external />
+        <NavCard href="https://planetearth.kr" icon={<Globe className="w-5 h-5" />} title="PlanetEarth" desc="공식 사이트" external />
       </div>
 
     </main>

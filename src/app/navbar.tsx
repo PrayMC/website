@@ -21,7 +21,7 @@ export default function Navbar() {
               loading="eager"
               className="w-9 h-9 shrink-0"
             />
-            <span className="text-lg font-extrabold pray-gradient-text">
+            <span className="text-lg font-extrabold text-[#b9d9fb]">
               Pray
             </span>
           </Link>
