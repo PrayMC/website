@@ -1,4 +1,4 @@
-const API_BASE = process.env.API_URL || "http://localhost:3001/dealmeter";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/dealmeter";
 
 export interface MatchSummary {
   id: string;
