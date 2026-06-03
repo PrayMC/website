@@ -97,7 +97,7 @@ export default async function MatchDetailPage({
           <span className="text-zinc-800">|</span>
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            {new Date(match.ended_at).toLocaleString(dl)}
+            {new Date(match.ended_at).toLocaleString(dl, { timeZone: "Asia/Seoul" })}
           </span>
           <span className="text-zinc-800">|</span>
           <span className="inline-flex items-center gap-1.5">
