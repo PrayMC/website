@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/dealmeter";
+const API_BASE = process.env.API_URL || "http://localhost:3001/dealmeter";
 
 export interface MatchSummary {
   id: string;
@@ -31,14 +31,14 @@ export interface MatchPlayer {
 
 export type PvPClassName = "Diamond" | "Archer" | "Bard" | "Rogue" | "Mage" | "Miner" | "Ghost";
 
-export const CLASS_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
-  Diamond:  { label: "다이아", color: "text-cyan-300",   icon: "Sword" },
-  Archer:   { label: "아쳐",   color: "text-green-400",  icon: "BowArrow" },
-  Bard:     { label: "바드",   color: "text-yellow-400", icon: "ShieldHalf" },
-  Rogue:    { label: "로그",   color: "text-purple-400", icon: "Zap" },
-  Mage:     { label: "메이지", color: "text-orange-400", icon: "Flame" },
-  Miner:    { label: "마이너", color: "text-stone-400",  icon: "Pickaxe" },
-  Ghost:    { label: "고스트", color: "text-zinc-400",   icon: "Ghost" },
+export const CLASS_CONFIG: Record<string, { color: string; icon: string }> = {
+  Diamond:  { color: "text-cyan-300",   icon: "Sword" },
+  Archer:   { color: "text-green-400",  icon: "BowArrow" },
+  Bard:     { color: "text-yellow-400", icon: "ShieldHalf" },
+  Rogue:    { color: "text-purple-400", icon: "Zap" },
+  Mage:     { color: "text-orange-400", icon: "Flame" },
+  Miner:    { color: "text-stone-400",  icon: "Pickaxe" },
+  Ghost:    { color: "text-zinc-400",   icon: "Ghost" },
 };
 
 export interface MatchEventData {
@@ -85,11 +85,11 @@ export async function getMatch(id: string): Promise<MatchDetail> {
   return res.json();
 }
 
-export function formatDuration(ms: number): string {
+export function formatDuration(ms: number, minLabel = "분 ", secLabel = "초"): string {
   const totalSeconds = Math.floor(ms / 1000);
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
-  return `${minutes}분 ${seconds}초`;
+  return `${minutes}${minLabel}${seconds}${secLabel}`;
 }
 
 export function getHeadUrl(playerUuid: string, size = 64): string {

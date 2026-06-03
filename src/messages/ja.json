@@ -1,0 +1,53 @@
+{
+  "navbar": {
+    "matchHistory": "マッチ履歴",
+    "discord": "Discord",
+    "localeSwitcherLabel": "言語を選択"
+  },
+  "home": {
+    "matchHistory": "マッチ履歴",
+    "matchHistoryDesc": "戦闘統計を確認",
+    "discord": "Discord",
+    "discordDesc": "コミュニティに参加",
+    "planetearth": "PlanetEarth",
+    "planetearthDesc": "公式サイト"
+  },
+  "footer": {
+    "copyright": "플래닛네트워크",
+    "notAffiliated": "PlanetEarth is not affiliated with Mojang or Microsoft.",
+    "help": "Help: contact@planetearth.kr"
+  },
+  "dealmeter": {
+    "noMatches": "記録された戦闘はありません。",
+    "prev": "前へ",
+    "next": "次へ",
+    "matchNotFound": "マッチが見つかりません。",
+    "backToList": "一覧に戻る",
+    "list": "一覧",
+    "player": "プレイヤー",
+    "kills": "キル",
+    "deaths": "デス",
+    "damage": "ダメージ",
+    "hits": "ヒット",
+    "bow": "弓",
+    "tag": "タグ",
+    "heal": "ヒール",
+    "noPlayers": "参加記録なし",
+    "timeline": "戦闘タイムライン",
+    "showMore": "もっと見る（残り{remaining}件）",
+    "title": "Pray - マッチ履歴"
+  },
+  "duration": {
+    "min": "分",
+    "sec": "秒"
+  },
+  "classLabels": {
+    "Diamond": "ダイヤ",
+    "Archer": "アーチャー",
+    "Bard": "バード",
+    "Rogue": "ローグ",
+    "Mage": "メイジ",
+    "Miner": "マイナー",
+    "Ghost": "ゴースト"
+  }
+}

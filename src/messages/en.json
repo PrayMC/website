@@ -1,0 +1,53 @@
+{
+  "navbar": {
+    "matchHistory": "Matches",
+    "discord": "Discord",
+    "localeSwitcherLabel": "Select language"
+  },
+  "home": {
+    "matchHistory": "Matches",
+    "matchHistoryDesc": "View battle statistics",
+    "discord": "Discord",
+    "discordDesc": "Join the community",
+    "planetearth": "PlanetEarth",
+    "planetearthDesc": "Official site"
+  },
+  "footer": {
+    "copyright": "플래닛네트워크",
+    "notAffiliated": "PlanetEarth is not affiliated with Mojang or Microsoft.",
+    "help": "Help: contact@planetearth.kr"
+  },
+  "dealmeter": {
+    "noMatches": "No recorded matches.",
+    "prev": "Prev",
+    "next": "Next",
+    "matchNotFound": "Match not found.",
+    "backToList": "Back to list",
+    "list": "List",
+    "player": "Player",
+    "kills": "Kills",
+    "deaths": "Deaths",
+    "damage": "DMG",
+    "hits": "Hits",
+    "bow": "Bow",
+    "tag": "Tag",
+    "heal": "Heal",
+    "noPlayers": "No participants",
+    "timeline": "Battle Timeline",
+    "showMore": "Show more ({remaining} remaining)",
+    "title": "Pray - Matches"
+  },
+  "duration": {
+    "min": "m ",
+    "sec": "s"
+  },
+  "classLabels": {
+    "Diamond": "Diamond",
+    "Archer": "Archer",
+    "Bard": "Bard",
+    "Rogue": "Rogue",
+    "Mage": "Mage",
+    "Miner": "Miner",
+    "Ghost": "Ghost"
+  }
+}

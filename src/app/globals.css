@@ -21,18 +21,16 @@ body {
   overflow-x: hidden;
 }
 
-.pray-gradient-text {
-  background: linear-gradient(135deg, #b9d9fb, #d0c4f7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 .pray-gradient-border {
   background: linear-gradient(90deg, #b9d9fb, #d0c4f7);
 }
 
 @media (min-width: 640px) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #27272a transparent;
+  }
+
   ::-webkit-scrollbar {
     width: 6px;
   }
