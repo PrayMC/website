@@ -35,7 +35,8 @@
     "noPlayers": "참가 기록 없음",
     "timeline": "전투 타임라인",
     "showMore": "더 보기 ({remaining}개 남음)",
-    "title": "Pray - 매치 기록"
+    "title": "Pray - 매치 기록",
+    "description": "PlanetEarth KITMAP 전투 기록과 통계를 확인하세요."
   },
   "duration": {
     "min": "분 ",

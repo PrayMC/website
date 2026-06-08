@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import {
   ArrowLeft,
@@ -34,6 +35,24 @@ import {
 } from "@/lib/api";
 import { dateLocaleMap, type Locale } from "@/i18n/routing";
 import Timeline from "./timeline";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  try {
+    const match = await getMatch(id);
+    const title = `${match.team1_name} vs ${match.team2_name} (${match.team1_kills}:${match.team2_kills}) - Pray`;
+    return {
+      title,
+      openGraph: { title },
+    };
+  } catch {
+    return { title: "Match - Pray" };
+  }
+}
 
 export default async function MatchDetailPage({
   params,

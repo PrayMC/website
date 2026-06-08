@@ -11,7 +11,7 @@ export async function generateMetadata({
   const t = await getTranslations("dealmeter");
   return {
     title: t("title"),
-    description: "Pray - PlanetEarth KITMAP",
+    description: t("description"),
   };
 }
 

@@ -35,7 +35,8 @@
     "noPlayers": "No participants",
     "timeline": "Battle Timeline",
     "showMore": "Show more ({remaining} remaining)",
-    "title": "Pray - Matches"
+    "title": "Pray - Matches",
+    "description": "View PlanetEarth KITMAP battle records and statistics."
   },
   "duration": {
     "min": "m ",

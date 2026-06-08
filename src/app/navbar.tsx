@@ -12,11 +12,10 @@ export default async function Navbar() {
         <div className="flex items-center justify-between h-14">
           <Link href="/" className="flex items-center gap-2 group">
             <Image
-              src="/logo.png"
+              src="/logo-sm.png"
               alt="Pray"
               width={36}
               height={36}
-              priority
               className="w-9 h-9 shrink-0"
             />
             <span className="text-lg font-extrabold text-[#b9d9fb]">Pray</span>

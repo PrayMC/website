@@ -1,7 +1,43 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { BarChart3, Globe } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { setRequestLocale, getTranslations } from "next-intl/server";
+
+const metaTitles: Record<string, string> = {
+  ko: "Pray - PlanetEarth KITMAP",
+  en: "Pray - PlanetEarth KITMAP",
+  ja: "Pray - PlanetEarth KITMAP",
+};
+
+const metaDescriptions: Record<string, string> = {
+  ko: "PlanetEarth KITMAP 팀의 공식 사이트. 매치 기록과 전투 통계를 확인하세요.",
+  en: "Official site for PlanetEarth KITMAP team Pray. View match history and battle statistics.",
+  ja: "PlanetEarth KITMAP チーム Pray の公式サイト。マッチ履歴と戦闘統計を確認できます。",
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: metaTitles[locale] || metaTitles.ko,
+    description: metaDescriptions[locale] || metaDescriptions.ko,
+    openGraph: {
+      title: metaTitles[locale] || metaTitles.ko,
+      description: metaDescriptions[locale] || metaDescriptions.ko,
+      images: [{ url: "/logo-lg.png", width: 576, height: 576, alt: "Pray" }],
+    },
+    twitter: {
+      card: "summary",
+      title: metaTitles[locale] || metaTitles.ko,
+      description: metaDescriptions[locale] || metaDescriptions.ko,
+      images: ["/logo-lg.png"],
+    },
+  };
+}
 
 export default async function HomePage({
   params,
@@ -16,10 +52,10 @@ export default async function HomePage({
     <main className="max-w-3xl mx-auto px-4 pt-20 sm:pt-28 pb-16">
       <div className="flex flex-col items-center text-center mb-16 sm:mb-20">
         <Image
-          src="/logo.png"
+          src="/logo-lg.png"
           alt="Pray"
-          width={240}
-          height={240}
+          width={576}
+          height={576}
           className="w-44 h-44 sm:w-72 sm:h-72 mb-8"
           priority
         />

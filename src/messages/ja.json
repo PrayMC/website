@@ -35,7 +35,8 @@
     "noPlayers": "参加記録なし",
     "timeline": "戦闘タイムライン",
     "showMore": "もっと見る（残り{remaining}件）",
-    "title": "Pray - マッチ履歴"
+    "title": "Pray - マッチ履歴",
+    "description": "PlanetEarth KITMAP の戦闘記録と統計を確認できます。"
   },
   "duration": {
     "min": "分",
