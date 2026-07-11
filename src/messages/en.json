@@ -18,6 +18,8 @@
   },
   "dealmeter": {
     "noMatches": "No recorded matches.",
+    "searchPlaceholder": "Search team, player, world, or match ID",
+    "noResults": "No results found.",
     "loadError": "Failed to load match history. Please try again later.",
     "draw": "Draw",
     "unknownPlayer": "Unknown",

@@ -57,8 +57,13 @@ export interface MatchListResponse {
   };
 }
 
-export async function getMatches(page = 1, limit = 20): Promise<MatchListResponse> {
-  const res = await fetch(`${API_BASE}/matches?page=${page}&limit=${limit}`, {
+export async function getMatches(
+  page = 1,
+  limit = 20,
+  search = "",
+): Promise<MatchListResponse> {
+  const searchQuery = search ? `&search=${encodeURIComponent(search)}` : "";
+  const res = await fetch(`${API_BASE}/matches?page=${page}&limit=${limit}${searchQuery}`, {
     next: { revalidate: 30 },
   });
   if (!res.ok) throw new Error(`Failed to fetch matches (${res.status})`);

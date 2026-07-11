@@ -28,9 +28,6 @@ export default async function Navbar() {
             >
               <BarChart3 className="w-4 h-4" aria-hidden />
               <span className="hidden sm:inline">{t("matchHistory")}</span>
-              <span className="hidden sm:inline text-[9px] font-bold uppercase tracking-wider text-[#b9d9fb] bg-[#b9d9fb]/10 px-1.5 py-0.5 rounded">
-                Beta
-              </span>
             </Link>
             <a
               href="https://discord.gg/aTCD3aXPND"

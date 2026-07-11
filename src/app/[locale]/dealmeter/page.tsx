@@ -9,6 +9,8 @@ import {
   Inbox,
   AlertTriangle,
   Map,
+  Search,
+  SearchX,
   type LucideIcon,
 } from "lucide-react";
 import { Link, redirect, type Locale } from "@/i18n/routing";
@@ -28,19 +30,20 @@ export default async function DealMeterPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; search?: string }>;
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
 
   const t = await getTranslations("dealmeter");
   const td = await getTranslations("duration");
-  const { page: pageStr } = await searchParams;
+  const { page: pageStr, search: searchStr } = await searchParams;
   const page = Math.max(1, parseInt(pageStr || "1", 10) || 1);
+  const search = (searchStr || "").trim().slice(0, 64);
 
   let data;
   try {
-    data = await getMatches(page, 5);
+    data = await getMatches(page, 5, search);
   } catch {
     return <StatusMessage icon={AlertTriangle} message={t("loadError")} />;
   }
@@ -48,32 +51,44 @@ export default async function DealMeterPage({
   const { totalPages } = data.pagination;
   if (totalPages >= 1 && page > totalPages) {
     redirect({
-      href: { pathname: "/dealmeter", query: { page: totalPages } },
+      href: {
+        pathname: "/dealmeter",
+        query: { page: totalPages, ...(search && { search }) },
+      },
       locale: locale as Locale,
     });
   }
-  if (data.matches.length === 0) {
+  if (data.matches.length === 0 && !search) {
     return <StatusMessage icon={Inbox} message={t("noMatches")} />;
   }
 
+  const pageHref = (p: number) =>
+    `/dealmeter?page=${p}${search ? `&search=${encodeURIComponent(search)}` : ""}`;
+
   return (
     <main className="max-w-3xl mx-auto px-4 py-6 sm:py-10">
-      <div className="flex flex-col gap-4 sm:gap-6">
-        {data.matches.map((match) => (
-          <MatchCard key={match.id} match={match} locale={locale} t={t} td={td} />
-        ))}
-      </div>
+      <SearchForm locale={locale} search={search} placeholder={t("searchPlaceholder")} />
+
+      {data.matches.length === 0 ? (
+        <StatusBody icon={SearchX} message={t("noResults")} />
+      ) : (
+        <div className="flex flex-col gap-4 sm:gap-6">
+          {data.matches.map((match) => (
+            <MatchCard key={match.id} match={match} locale={locale} t={t} td={td} />
+          ))}
+        </div>
+      )}
 
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-4 mt-10">
-          <PaginationLink href={page > 1 ? `/dealmeter?page=${page - 1}` : null}>
+          <PaginationLink href={page > 1 ? pageHref(page - 1) : null}>
             <ChevronLeft className="w-4 h-4" />
             {t("prev")}
           </PaginationLink>
           <span className="text-sm text-zinc-500 tabular-nums min-w-[4rem] text-center">
             {page} / {totalPages}
           </span>
-          <PaginationLink href={page < totalPages ? `/dealmeter?page=${page + 1}` : null}>
+          <PaginationLink href={page < totalPages ? pageHref(page + 1) : null}>
             {t("next")}
             <ChevronRight className="w-4 h-4" />
           </PaginationLink>
@@ -83,13 +98,46 @@ export default async function DealMeterPage({
   );
 }
 
-function StatusMessage({ icon: Icon, message }: { icon: LucideIcon; message: string }) {
+function SearchForm({
+  locale,
+  search,
+  placeholder,
+}: {
+  locale: string;
+  search: string;
+  placeholder: string;
+}) {
+  return (
+    <form action={`/${locale}/dealmeter`} method="get" className="mb-4 sm:mb-6">
+      <div className="relative">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+        <input
+          type="search"
+          name="search"
+          defaultValue={search}
+          maxLength={64}
+          placeholder={placeholder}
+          aria-label={placeholder}
+          className="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+        />
+      </div>
+    </form>
+  );
+}
+
+function StatusBody({ icon: Icon, message }: { icon: LucideIcon; message: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-24 text-zinc-600">
+      <Icon className="w-12 h-12 mb-4 text-zinc-700" />
+      <p className="text-base">{message}</p>
+    </div>
+  );
+}
+
+function StatusMessage({ icon, message }: { icon: LucideIcon; message: string }) {
   return (
     <main className="max-w-3xl mx-auto px-4 py-6 sm:py-10">
-      <div className="flex flex-col items-center justify-center py-24 text-zinc-600">
-        <Icon className="w-12 h-12 mb-4 text-zinc-700" />
-        <p className="text-base">{message}</p>
-      </div>
+      <StatusBody icon={icon} message={message} />
     </main>
   );
 }

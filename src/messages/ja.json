@@ -18,6 +18,8 @@
   },
   "dealmeter": {
     "noMatches": "記録された戦闘はありません。",
+    "searchPlaceholder": "チーム・プレイヤー・ワールド・マッチIDを検索",
+    "noResults": "検索結果がありません。",
     "loadError": "マッチ履歴を読み込めませんでした。しばらくしてからもう一度お試しください。",
     "draw": "引き分け",
     "unknownPlayer": "不明",

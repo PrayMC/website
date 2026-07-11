@@ -18,6 +18,8 @@
   },
   "dealmeter": {
     "noMatches": "기록된 전투가 없습니다.",
+    "searchPlaceholder": "팀, 플레이어, 월드, 매치 ID 검색",
+    "noResults": "검색 결과가 없습니다.",
     "loadError": "매치 기록을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.",
     "draw": "무승부",
     "unknownPlayer": "알 수 없음",
