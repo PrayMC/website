@@ -16,11 +16,6 @@
     "title": "Page not found.",
     "backHome": "Back to home"
   },
-  "footer": {
-    "copyright": "PlanetNetwork",
-    "notAffiliated": "PlanetEarth is not affiliated with Mojang or Microsoft.",
-    "help": "Help: contact@planetearth.kr"
-  },
   "dealmeter": {
     "noMatches": "No recorded matches.",
     "loadError": "Failed to load match history. Please try again later.",

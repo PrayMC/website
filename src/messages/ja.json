@@ -16,11 +16,6 @@
     "title": "ページが見つかりません。",
     "backHome": "ホームへ戻る"
   },
-  "footer": {
-    "copyright": "プラネットネットワーク",
-    "notAffiliated": "PlanetEarth is not affiliated with Mojang or Microsoft.",
-    "help": "Help: contact@planetearth.kr"
-  },
   "dealmeter": {
     "noMatches": "記録された戦闘はありません。",
     "loadError": "マッチ履歴を読み込めませんでした。しばらくしてからもう一度お試しください。",

@@ -12,11 +12,6 @@
     "planetearth": "PlanetEarth",
     "planetearthDesc": "공식 사이트"
   },
-  "footer": {
-    "copyright": "플래닛네트워크",
-    "notAffiliated": "PlanetEarth is not affiliated with Mojang or Microsoft.",
-    "help": "Help: contact@planetearth.kr"
-  },
   "notFound": {
     "title": "페이지를 찾을 수 없습니다.",
     "backHome": "홈으로"
