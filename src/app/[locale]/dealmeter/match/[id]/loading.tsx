@@ -10,16 +10,16 @@ export default function MatchDetailLoading() {
           <div className="h-4 w-20 bg-zinc-800 rounded" />
         </div>
         <div className="flex items-center">
-          <div className="flex-1 text-right">
-            <div className="h-7 w-32 bg-zinc-800 rounded ml-auto mb-2" />
+          <div className="flex-1 min-w-0 text-right">
+            <div className="h-7 w-full max-w-32 bg-zinc-800 rounded ml-auto mb-2" />
           </div>
           <div className="px-4 sm:px-12 flex items-baseline gap-3 sm:gap-5">
             <div className="h-12 w-12 sm:h-16 sm:w-16 bg-zinc-800 rounded" />
             <div className="h-5 w-3 bg-zinc-800 rounded" />
             <div className="h-12 w-12 sm:h-16 sm:w-16 bg-zinc-800 rounded" />
           </div>
-          <div className="flex-1">
-            <div className="h-7 w-32 bg-zinc-800 rounded mb-2" />
+          <div className="flex-1 min-w-0">
+            <div className="h-7 w-full max-w-32 bg-zinc-800 rounded mb-2" />
           </div>
         </div>
       </div>

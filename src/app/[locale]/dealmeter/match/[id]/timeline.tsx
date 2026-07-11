@@ -41,7 +41,7 @@ export default async function Timeline({
                 <span className="text-[10px] sm:text-xs text-zinc-600 tabular-nums w-10 sm:w-12 shrink-0">
                   {timeStr}
                 </span>
-                <div className="flex-1 bg-zinc-800/50 border border-zinc-800 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3">
+                <div className="flex-1 min-w-0 bg-zinc-800/50 border border-zinc-800 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3">
                   <span className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm flex-wrap">
                     <strong className="text-emerald-400">
                       {e.actor_name ?? unknown}

@@ -110,9 +110,9 @@ export default async function MatchDetailPage({
 
       <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 sm:p-10 mb-4 sm:mb-6">
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-zinc-600 text-xs sm:text-sm tabular-nums tracking-wider mb-5 sm:mb-8">
-          <span className="inline-flex items-center gap-1.5">
-            <Hash className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            {match.id}
+          <span className="inline-flex items-center gap-1.5 max-w-full">
+            <Hash className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+            <span className="break-all">{match.id}</span>
           </span>
           <span className="text-zinc-800">|</span>
           <span className="inline-flex items-center gap-1.5">
@@ -136,10 +136,10 @@ export default async function MatchDetailPage({
         </div>
 
         <div className="flex items-center">
-          <div className="flex-1 text-right">
+          <div className="flex-1 min-w-0 text-right">
             <div className="flex items-center justify-end gap-2 sm:gap-3">
               {team1Won && (
-                <span className="inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-base font-black uppercase tracking-widest text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">
+                <span className="shrink-0 inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-base font-black uppercase tracking-widest text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">
                   <span className="hidden sm:inline">Victory</span>
                   <Trophy className="w-4 h-4 sm:w-6 sm:h-6" />
                 </span>
@@ -173,7 +173,7 @@ export default async function MatchDetailPage({
               </span>
             )}
           </div>
-          <div className="flex-1 text-left">
+          <div className="flex-1 min-w-0 text-left">
             <div className="flex items-center gap-2 sm:gap-3">
               <span
                 className={`text-lg sm:text-3xl font-bold truncate ${team2Won ? "text-white" : "text-zinc-500"}`}
@@ -181,7 +181,7 @@ export default async function MatchDetailPage({
                 {match.team2_name}
               </span>
               {team2Won && (
-                <span className="inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-base font-black uppercase tracking-widest text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">
+                <span className="shrink-0 inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-base font-black uppercase tracking-widest text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">
                   <Trophy className="w-4 h-4 sm:w-6 sm:h-6" />
                   <span className="hidden sm:inline">Victory</span>
                 </span>
@@ -224,7 +224,7 @@ export default async function MatchDetailPage({
 
 function WinBadge() {
   return (
-    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded">
+    <span className="shrink-0 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded">
       <Trophy className="w-3 h-3" />
       WIN
     </span>
@@ -257,15 +257,15 @@ function TeamPanel({
       <div
         className={`px-4 sm:px-5 py-3 sm:py-4 border-b ${accentBorder} ${accentBg}`}
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Shield className={`w-4 h-4 sm:w-5 sm:h-5 ${accentColor}`} />
-            <span className={`text-base sm:text-lg font-bold ${accentColor}`}>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <Shield className={`w-4 h-4 sm:w-5 sm:h-5 shrink-0 ${accentColor}`} />
+            <span className={`text-base sm:text-lg font-bold truncate ${accentColor}`}>
               {teamName}
             </span>
             {isWinner && <WinBadge />}
           </div>
-          <div className="flex items-center gap-1.5 text-amber-400">
+          <div className="flex items-center gap-1.5 text-amber-400 shrink-0">
             <Swords className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-60" />
             <span className="text-sm sm:text-base font-bold tabular-nums">
               {totalDamage.toLocaleString()}

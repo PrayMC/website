@@ -172,7 +172,7 @@ function MatchCard({
 }) {
   const { team1Won, team2Won, draw } = getWinners(match);
   const winBadge = (
-    <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-1.5 sm:px-2 py-0.5 rounded">
+    <span className="shrink-0 inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-1.5 sm:px-2 py-0.5 rounded">
       <Trophy className="w-3 h-3" />
       <span className="hidden sm:inline">WIN</span>
     </span>
@@ -182,7 +182,7 @@ function MatchCard({
     <Link href={`/dealmeter/match/${encodeURIComponent(match.id)}`}>
       <div className="group relative bg-zinc-900 rounded-xl border border-zinc-800 p-5 sm:p-8 hover:border-zinc-700 transition-all hover:bg-zinc-900/80">
         <div className="flex items-center">
-          <div className="flex-1 text-right pr-3 sm:pr-6">
+          <div className="flex-1 min-w-0 text-right pr-3 sm:pr-6">
             <div className="flex items-center justify-end gap-1.5 sm:gap-2">
               {team1Won && winBadge}
               <span
@@ -213,7 +213,7 @@ function MatchCard({
             </span>
           </div>
 
-          <div className="flex-1 text-left pl-3 sm:pl-6">
+          <div className="flex-1 min-w-0 text-left pl-3 sm:pl-6">
             <div className="flex items-center gap-1.5 sm:gap-2">
               <span
                 className={`text-sm sm:text-lg font-bold truncate ${team2Won ? "text-white" : "text-zinc-400"}`}
@@ -232,9 +232,9 @@ function MatchCard({
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-3 sm:mt-4 pt-3 border-t border-zinc-800 gap-1.5 sm:gap-0">
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs text-zinc-600 font-mono">
-              <Hash className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-              {match.id}
+            <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs text-zinc-600 font-mono max-w-full">
+              <Hash className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+              <span className="break-all">{match.id}</span>
             </span>
             {match.world_name && (
               <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-zinc-600">
