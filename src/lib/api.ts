@@ -94,7 +94,7 @@ export function formatDuration(
 }
 
 export function formatDate(iso: string, locale: string) {
-  return new Date(iso.replace(/Z$/, "+09:00")).toLocaleString(locale, {
+  return new Date(iso).toLocaleString(locale, {
     timeZone: "Asia/Seoul",
     timeZoneName: "short",
   });
