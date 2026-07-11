@@ -12,13 +12,20 @@
     "planetearth": "PlanetEarth",
     "planetearthDesc": "公式サイト"
   },
+  "notFound": {
+    "title": "ページが見つかりません。",
+    "backHome": "ホームへ戻る"
+  },
   "footer": {
-    "copyright": "플래닛네트워크",
+    "copyright": "プラネットネットワーク",
     "notAffiliated": "PlanetEarth is not affiliated with Mojang or Microsoft.",
     "help": "Help: contact@planetearth.kr"
   },
   "dealmeter": {
     "noMatches": "記録された戦闘はありません。",
+    "loadError": "マッチ履歴を読み込めませんでした。しばらくしてからもう一度お試しください。",
+    "draw": "引き分け",
+    "unknownPlayer": "不明",
     "prev": "前へ",
     "next": "次へ",
     "matchNotFound": "マッチが見つかりません。",
@@ -39,6 +46,7 @@
     "description": "PlanetEarth KITMAP の戦闘記録と統計を確認できます。"
   },
   "duration": {
+    "hour": "時間",
     "min": "分",
     "sec": "秒"
   },

@@ -8,10 +8,4 @@ export const routing = defineRouting({
 
 export type Locale = (typeof routing.locales)[number];
 
-export const dateLocaleMap: Record<Locale, string> = {
-  ko: "ko-KR",
-  en: "en-US",
-  ja: "ja-JP",
-};
-
-export const { Link, usePathname, useRouter } = createNavigation(routing);
+export const { Link, usePathname, useRouter, redirect } = createNavigation(routing);

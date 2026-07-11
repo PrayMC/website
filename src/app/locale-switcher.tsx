@@ -2,7 +2,7 @@
 
 import { Globe, ChevronDown } from "lucide-react";
 import { useParams } from "next/navigation";
-import { routing, usePathname, useRouter } from "@/i18n/routing";
+import { routing, usePathname, useRouter, type Locale } from "@/i18n/routing";
 
 const localeLabels: Record<(typeof routing.locales)[number], string> = {
   ko: "한국어",
@@ -21,7 +21,17 @@ export default function LocaleSwitcher({ ariaLabel }: { ariaLabel: string }) {
       <div className="relative flex items-center">
         <select
           value={currentLocale}
-          onChange={(e) => router.replace(pathname, { locale: e.target.value })}
+          onChange={(e) =>
+            router.replace(
+              {
+                pathname,
+                query: Object.fromEntries(
+                  new URLSearchParams(window.location.search),
+                ),
+              },
+              { locale: e.target.value as Locale },
+            )
+          }
           className="appearance-none bg-transparent pl-1 pr-5 py-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-100 cursor-pointer rounded-lg hover:bg-zinc-800/60 transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-500"
           aria-label={ariaLabel}
         >

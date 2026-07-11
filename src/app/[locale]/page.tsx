@@ -4,11 +4,7 @@ import { BarChart3, Globe } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 
-const metaTitles: Record<string, string> = {
-  ko: "Pray - PlanetEarth KITMAP",
-  en: "Pray - PlanetEarth KITMAP",
-  ja: "Pray - PlanetEarth KITMAP",
-};
+const META_TITLE = "Pray - PlanetEarth KITMAP";
 
 const metaDescriptions: Record<string, string> = {
   ko: "PlanetEarth KITMAP 팀의 공식 사이트. 매치 기록과 전투 통계를 확인하세요.",
@@ -22,18 +18,19 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const description = metaDescriptions[locale] || metaDescriptions.ko;
   return {
-    title: metaTitles[locale] || metaTitles.ko,
-    description: metaDescriptions[locale] || metaDescriptions.ko,
+    title: META_TITLE,
+    description,
     openGraph: {
-      title: metaTitles[locale] || metaTitles.ko,
-      description: metaDescriptions[locale] || metaDescriptions.ko,
+      title: META_TITLE,
+      description,
       images: [{ url: "/logo-lg.png", width: 576, height: 576, alt: "Pray" }],
     },
     twitter: {
       card: "summary",
-      title: metaTitles[locale] || metaTitles.ko,
-      description: metaDescriptions[locale] || metaDescriptions.ko,
+      title: META_TITLE,
+      description,
       images: ["/logo-lg.png"],
     },
   };

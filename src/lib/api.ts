@@ -29,18 +29,6 @@ export interface MatchPlayer {
   splash_heal: number;
 }
 
-export type PvPClassName = "Diamond" | "Archer" | "Bard" | "Rogue" | "Mage" | "Miner" | "Ghost";
-
-export const CLASS_CONFIG: Record<string, { color: string; icon: string }> = {
-  Diamond:  { color: "text-cyan-300",   icon: "Sword" },
-  Archer:   { color: "text-green-400",  icon: "BowArrow" },
-  Bard:     { color: "text-yellow-400", icon: "ShieldHalf" },
-  Rogue:    { color: "text-purple-400", icon: "Zap" },
-  Mage:     { color: "text-orange-400", icon: "Flame" },
-  Miner:    { color: "text-stone-400",  icon: "Pickaxe" },
-  Ghost:    { color: "text-zinc-400",   icon: "Ghost" },
-};
-
 export interface MatchEventData {
   id: number;
   match_id: string;
@@ -73,27 +61,41 @@ export async function getMatches(page = 1, limit = 20): Promise<MatchListRespons
   const res = await fetch(`${API_BASE}/matches?page=${page}&limit=${limit}`, {
     next: { revalidate: 30 },
   });
-  if (!res.ok) throw new Error("Failed to fetch matches");
+  if (!res.ok) throw new Error(`Failed to fetch matches (${res.status})`);
   return res.json();
 }
 
-export async function getMatch(id: string): Promise<MatchDetail> {
-  const res = await fetch(`${API_BASE}/matches/${id}`, {
-    next: { revalidate: 60 },
+export async function getMatch(id: string): Promise<MatchDetail | null> {
+  if (!/^[\w-]{1,64}$/.test(id)) return null;
+  const res = await fetch(`${API_BASE}/matches/${encodeURIComponent(id)}`, {
+    next: { revalidate: 30 },
   });
-  if (!res.ok) throw new Error("Failed to fetch match");
+  if (res.status === 404 || res.status === 400) return null;
+  if (!res.ok) throw new Error(`Failed to fetch match (${res.status})`);
   return res.json();
 }
 
-export function formatDuration(ms: number, minLabel = "분 ", secLabel = "초"): string {
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}${minLabel}${seconds}${secLabel}`;
+export function getWinners(match: MatchSummary) {
+  const winner = match.winner_team?.toLowerCase();
+  const team1Won = winner === match.team1_name.toLowerCase();
+  const team2Won = !team1Won && winner === match.team2_name.toLowerCase();
+  return { team1Won, team2Won, draw: !team1Won && !team2Won };
 }
 
-export function getHeadUrl(playerUuid: string, size = 64): string {
-  const uuid = playerUuid.replace(/-/g, "");
-  return `https://api.mcheads.org/head/${uuid}/${size}`;
+export function formatDuration(ms: number, t: (key: "hour" | "min" | "sec") => string) {
+  const total = Number.isFinite(ms) && ms > 0 ? Math.floor(ms / 1000) : 0;
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  return `${h ? h + t("hour") : ""}${m}${t("min")}${total % 60}${t("sec")}`;
 }
 
+export function formatDate(iso: string, locale: string) {
+  return new Date(iso).toLocaleString(locale, {
+    timeZone: "Asia/Seoul",
+    timeZoneName: "short",
+  });
+}
+
+export function getHeadUrl(playerUuid: string, size = 64) {
+  return `https://api.mcheads.org/head/${encodeURIComponent(playerUuid.replace(/-/g, ""))}/${size}`;
+}

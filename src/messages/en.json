@@ -12,13 +12,20 @@
     "planetearth": "PlanetEarth",
     "planetearthDesc": "Official site"
   },
+  "notFound": {
+    "title": "Page not found.",
+    "backHome": "Back to home"
+  },
   "footer": {
-    "copyright": "플래닛네트워크",
+    "copyright": "PlanetNetwork",
     "notAffiliated": "PlanetEarth is not affiliated with Mojang or Microsoft.",
     "help": "Help: contact@planetearth.kr"
   },
   "dealmeter": {
     "noMatches": "No recorded matches.",
+    "loadError": "Failed to load match history. Please try again later.",
+    "draw": "Draw",
+    "unknownPlayer": "Unknown",
     "prev": "Prev",
     "next": "Next",
     "matchNotFound": "Match not found.",
@@ -39,6 +46,7 @@
     "description": "View PlanetEarth KITMAP battle records and statistics."
   },
   "duration": {
+    "hour": "h ",
     "min": "m ",
     "sec": "s"
   },
