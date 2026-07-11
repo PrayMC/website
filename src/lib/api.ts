@@ -8,7 +8,7 @@ export interface MatchSummary {
   team2_kills: number;
   winner_team: string | null;
   world_name: string | null;
-  duration_ms: number;
+  duration_ms: number | string;
   started_at: string;
   ended_at: string;
 }
@@ -82,15 +82,19 @@ export function getWinners(match: MatchSummary) {
   return { team1Won, team2Won, draw: !team1Won && !team2Won };
 }
 
-export function formatDuration(ms: number, t: (key: "hour" | "min" | "sec") => string) {
-  const total = Number.isFinite(ms) && ms > 0 ? Math.floor(ms / 1000) : 0;
+export function formatDuration(
+  ms: number | string,
+  t: (key: "hour" | "min" | "sec") => string,
+) {
+  const n = Number(ms);
+  const total = Number.isFinite(n) && n > 0 ? Math.floor(n / 1000) : 0;
   const h = Math.floor(total / 3600);
   const m = Math.floor((total % 3600) / 60);
   return `${h ? h + t("hour") : ""}${m}${t("min")}${total % 60}${t("sec")}`;
 }
 
 export function formatDate(iso: string, locale: string) {
-  return new Date(iso).toLocaleString(locale, {
+  return new Date(iso.replace(/Z$/, "+09:00")).toLocaleString(locale, {
     timeZone: "Asia/Seoul",
     timeZoneName: "short",
   });
