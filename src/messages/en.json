@@ -42,10 +42,11 @@
     "description": "View PlanetEarth KITMAP battle records and statistics.",
     "seriesCount": "{count, plural, one {# match} other {# matches}}",
     "totalKills": "Total kills",
-    "seriesNotFound": "Record not found.",
-    "victory": "Victory",
-    "win": "WIN",
-    "winner": "Winner"
+    "seriesNotFound": "Series not found.",
+    "winner": "Victory",
+    "backToSeries": "Back to series",
+    "seriesTitle": "Pray - Series",
+    "matchTitle": "Pray - Match"
   },
   "duration": {
     "hour": "h ",

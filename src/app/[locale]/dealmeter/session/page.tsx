@@ -1,20 +1,29 @@
 import { cache } from "react";
 import type { Metadata } from "next";
-import { ArrowLeft, AlertTriangle, SearchX, FolderOpen, CalendarDays, Skull, Clock } from "lucide-react";
-import { Link } from "@/i18n/routing";
+import { AlertTriangle, SearchX, FolderOpen, CalendarDays, Skull, Clock } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import {
   getSessions,
   first,
+  MAX_PAGE,
   formatDuration,
   formatTimeRange,
   type MatchSession,
   type SearchParams,
 } from "@/lib/api";
-import { Page, CardGrid, StatusMessage, MatchCard, SessionBoard } from "../ui";
+import {
+  Page,
+  CardGrid,
+  StatusMessage,
+  BackLink,
+  MatchCard,
+  SessionBoard,
+  listHref,
+  sessionKey,
+} from "../ui";
 
 // Keyed by (teams, time window) rather than a stable ID, so never indexed.
-const NOINDEX: Metadata = { title: "Pray - Series", robots: { index: false } };
+const noindex = (title: string): Metadata => ({ title, robots: { index: false } });
 
 // Primitive args so `cache` dedupes the generateMetadata and page calls.
 const loadSession = cache(
@@ -54,13 +63,14 @@ export async function generateMetadata({
   searchParams: Promise<SearchParams>;
 }): Promise<Metadata> {
   const q = await searchParams; // outside the try: Next signals dynamic rendering by throwing
+  const t = await getTranslations("dealmeter");
   try {
     const s = await load(q);
-    if (!s) return NOINDEX;
+    if (!s) return noindex(t("seriesTitle"));
     const title = `Pray - ${s.team_a} vs ${s.team_b} (${s.team_a_wins}:${s.team_b_wins})`;
-    return { ...NOINDEX, title, openGraph: { title } };
+    return { ...noindex(title), openGraph: { title } };
   } catch {
-    return NOINDEX;
+    return noindex(t("seriesTitle"));
   }
 }
 
@@ -76,29 +86,41 @@ export default async function SessionPage({
   const td = await getTranslations("duration");
   const q = await searchParams;
   const search = first(q.search).trim().slice(0, 64);
+  const page = Math.min(MAX_PAGE, Math.max(1, parseInt(first(q.page), 10) || 1));
+  const backHref = listHref(search, page);
 
   let session;
   try {
     session = await load(q);
   } catch (e) {
     console.error("session fetch failed", e);
-    return <StatusMessage icon={AlertTriangle} message={t("loadError")} backLabel={t("backToList")} />;
+    return (
+      <StatusMessage
+        icon={AlertTriangle}
+        message={t("loadError")}
+        backLabel={t("backToList")}
+        backHref={backHref}
+      />
+    );
   }
   if (!session) {
-    return <StatusMessage icon={SearchX} message={t("seriesNotFound")} backLabel={t("backToList")} />;
+    return (
+      <StatusMessage
+        icon={SearchX}
+        message={t("seriesNotFound")}
+        backLabel={t("backToList")}
+        backHref={backHref}
+      />
+    );
   }
 
   const totalMs = session.games.reduce((sum, g) => sum + (Number(g.duration_ms) || 0), 0);
 
   return (
     <Page>
-      <Link
-        href={`/dealmeter${search ? `?search=${encodeURIComponent(search)}` : ""}`}
-        className="inline-flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-200 transition-colors mb-6 sm:mb-8"
-      >
-        <ArrowLeft className="w-4 h-4" aria-hidden />
-        {t("backToList")}
-      </Link>
+      <div className="mb-6 sm:mb-8">
+        <BackLink href={backHref} label={t("backToList")} />
+      </div>
 
       <section className="rounded-xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6 mb-8 sm:mb-10">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-xs text-zinc-500 tabular-nums mb-4">
@@ -126,7 +148,13 @@ export default async function SessionPage({
 
       <CardGrid>
         {session.games.map((match) => (
-          <MatchCard key={match.id} match={match} locale={locale} t={t} />
+          <MatchCard
+            key={match.id}
+            match={match}
+            locale={locale}
+            origin={{ search, page, session: sessionKey(session) }}
+            t={t}
+          />
         ))}
       </CardGrid>
     </Page>

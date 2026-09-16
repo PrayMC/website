@@ -161,7 +161,7 @@ export function formatDate(iso: string, locale: string) {
   return new Date(iso).toLocaleString(locale, { timeZone: SEOUL, timeZoneName: "short" });
 }
 
-export function formatShortDate(iso: string, locale: string) {
+function formatShortDate(iso: string, locale: string) {
   return new Date(iso).toLocaleString(locale, {
     timeZone: SEOUL,
     month: "numeric",

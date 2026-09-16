@@ -13,6 +13,7 @@ import {
   Pagination,
   MatchCard,
   SessionCard,
+  listHref,
 } from "./ui";
 
 type Props = { params: Promise<{ locale: string }>; searchParams: Promise<SearchParams> };
@@ -56,8 +57,7 @@ export default async function DealMeterPage({
     return <StatusMessage icon={Inbox} message={t("noMatches")} />;
   }
 
-  const pageHref = (p: number) =>
-    `/dealmeter?page=${p}${search ? `&search=${encodeURIComponent(search)}` : ""}`;
+  const origin = { search, page };
 
   return (
     <Page>
@@ -67,7 +67,7 @@ export default async function DealMeterPage({
           search={search}
           placeholder={t("searchPlaceholder")}
         />
-        <Pagination page={page} totalPages={totalPages} href={pageHref} t={t} />
+        <Pagination page={page} totalPages={totalPages} href={(p) => listHref(search, p)} t={t} />
       </div>
 
       {data.sessions.length === 0 ? (
@@ -76,13 +76,19 @@ export default async function DealMeterPage({
         <CardGrid>
           {data.sessions.map((session) =>
             session.games.length === 1 ? (
-              <MatchCard key={session.games[0].id} match={session.games[0]} locale={locale} t={t} />
+              <MatchCard
+                key={session.games[0].id}
+                match={session.games[0]}
+                locale={locale}
+                origin={origin}
+                t={t}
+              />
             ) : (
               <SessionCard
                 key={`${session.team_a}|${session.team_b}|${session.started_at}`}
                 session={session}
                 locale={locale}
-                search={search}
+                origin={origin}
                 t={t}
               />
             ),

@@ -42,10 +42,11 @@
     "description": "PlanetEarth KITMAP の戦闘記録と統計を確認できます。",
     "seriesCount": "{count}戦",
     "totalKills": "合計キル",
-    "seriesNotFound": "記録が見つかりません。",
-    "victory": "勝利",
-    "win": "勝",
-    "winner": "勝利チーム"
+    "seriesNotFound": "シリーズが見つかりません。",
+    "winner": "勝利",
+    "backToSeries": "シリーズに戻る",
+    "seriesTitle": "Pray - シリーズ",
+    "matchTitle": "Pray - マッチ"
   },
   "duration": {
     "hour": "時間",

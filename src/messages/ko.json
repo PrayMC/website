@@ -42,10 +42,11 @@
     "description": "PlanetEarth KITMAP 전투 기록과 통계를 확인하세요.",
     "seriesCount": "{count}판",
     "totalKills": "총 킬",
-    "seriesNotFound": "기록을 찾을 수 없습니다.",
-    "victory": "승리",
-    "win": "승",
-    "winner": "승리 팀"
+    "seriesNotFound": "시리즈를 찾을 수 없습니다.",
+    "winner": "승리",
+    "backToSeries": "시리즈로",
+    "seriesTitle": "Pray - 시리즈",
+    "matchTitle": "Pray - 매치"
   },
   "duration": {
     "hour": "시간 ",

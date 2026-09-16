@@ -3,10 +3,10 @@ import { ArrowLeft, ChevronLeft, ChevronRight, Search, type LucideIcon } from "l
 import { Link } from "@/i18n/routing";
 import {
   getWinners,
-  formatShortDate,
   formatTimeRange,
   type MatchSummary,
   type MatchSession,
+  type SessionKey,
 } from "@/lib/api";
 
 export type Translate = (key: string, values?: Record<string, string | number>) => string;
@@ -20,6 +20,45 @@ export function Page({ children }: { children: ReactNode }) {
 export function CardGrid({ children }: { children: ReactNode }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">{children}</div>
+  );
+}
+
+/** Where a card was clicked from, so the detail page's back link can return there. */
+export interface Origin {
+  search: string;
+  page: number;
+  session?: SessionKey;
+}
+
+function withOrigin(q: URLSearchParams, { search, page }: Origin) {
+  if (search) q.set("search", search);
+  if (page > 1) q.set("page", String(page));
+  const s = q.toString();
+  return s ? `?${s}` : "";
+}
+
+export function listHref(search: string, page: number) {
+  return `/dealmeter${withOrigin(new URLSearchParams(), { search, page })}`;
+}
+
+export function sessionHref(key: SessionKey, origin: Origin) {
+  return `/dealmeter/session${withOrigin(new URLSearchParams({ ...key }), origin)}`;
+}
+
+function matchHref(id: string, origin: Origin) {
+  const q = new URLSearchParams(origin.session ? { ...origin.session } : {});
+  return `/dealmeter/match/${encodeURIComponent(id)}${withOrigin(q, origin)}`;
+}
+
+export function BackLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-100 transition-colors"
+    >
+      <ArrowLeft className="w-4 h-4" aria-hidden />
+      {label}
+    </Link>
   );
 }
 
@@ -54,29 +93,32 @@ export function StatusBody({
   icon: Icon,
   message,
   backLabel,
+  backHref = "/dealmeter",
 }: {
   icon: LucideIcon;
   message: string;
   backLabel?: string;
+  backHref?: string;
 }) {
   return (
     <div className="flex flex-col items-center justify-center py-24 text-zinc-600">
       <Icon className="w-12 h-12 mb-4 text-zinc-700" />
       <p className="text-base">{message}</p>
       {backLabel && (
-        <Link
-          href="/dealmeter"
-          className="mt-4 inline-flex items-center gap-1.5 text-sm text-[#b9d9fb] hover:text-[#d0e5fd] transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" aria-hidden />
-          {backLabel}
-        </Link>
+        <div className="mt-4">
+          <BackLink href={backHref} label={backLabel} />
+        </div>
       )}
     </div>
   );
 }
 
-export function StatusMessage(props: { icon: LucideIcon; message: string; backLabel?: string }) {
+export function StatusMessage(props: {
+  icon: LucideIcon;
+  message: string;
+  backLabel?: string;
+  backHref?: string;
+}) {
   return (
     <Page>
       <StatusBody {...props} />
@@ -149,14 +191,14 @@ export function Scoreboard({
   t: Translate;
   large?: boolean;
 }) {
+  // No dot on either side is what marks a draw, so it needs no label and no card stands taller
+  // than its row; zinc-300 keeps both sides level rather than dimming them as though both lost.
+  const drawn = !wonA && !wonB;
+  const tone = (won: boolean) => (drawn ? "text-zinc-300" : won ? "text-white" : "text-zinc-500");
   const name = (won: boolean) =>
-    `min-w-0 truncate font-semibold ${large ? "text-base sm:text-lg" : "text-sm"} ${
-      won ? "text-white" : "text-zinc-500"
-    }`;
+    `min-w-0 truncate font-semibold ${large ? "text-base sm:text-lg" : "text-sm"} ${tone(won)}`;
   const score = (won: boolean) =>
-    `font-bold tabular-nums leading-none ${large ? "text-4xl sm:text-5xl" : "text-2xl"} ${
-      won ? "text-white" : "text-zinc-500"
-    }`;
+    `font-bold tabular-nums leading-none ${large ? "text-4xl sm:text-5xl" : "text-2xl"} ${tone(won)}`;
   const dot = (
     <>
       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" aria-hidden />
@@ -180,11 +222,7 @@ export function Scoreboard({
           <span className={name(wonB)}>{teamB}</span>
         </div>
       </div>
-      {!wonA && !wonB && (
-        <p className="mt-1.5 text-center text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
-          {t("draw")}
-        </p>
-      )}
+      {drawn && <span className="sr-only">{t("draw")}</span>}
     </div>
   );
 }
@@ -224,16 +262,18 @@ function Card({
 export function MatchCard({
   match,
   locale,
+  origin,
   t,
 }: {
   match: MatchSummary;
   locale: string;
+  origin: Origin;
   t: Translate;
 }) {
   const { team1Won, team2Won } = getWinners(match);
   return (
     <Card
-      href={`/dealmeter/match/${encodeURIComponent(match.id)}`}
+      href={matchHref(match.id, origin)}
       board={
         <Scoreboard
           teamA={match.team1_name}
@@ -245,7 +285,7 @@ export function MatchCard({
           t={t}
         />
       }
-      footer={formatShortDate(match.ended_at, locale)}
+      footer={formatTimeRange(match.started_at, match.ended_at, locale)}
     />
   );
 }
@@ -273,27 +313,29 @@ export function SessionBoard({
   );
 }
 
-export function SessionCard({
-  session,
-  locale,
-  search,
-  t,
-}: {
-  session: MatchSession;
-  locale: string;
-  search: string; // forwarded so the detail page groups the same matches the card summarized
-  t: Translate;
-}) {
-  const query = new URLSearchParams({
+export function sessionKey(session: MatchSession): SessionKey {
+  return {
     team1: session.team_a,
     team2: session.team_b,
     from: session.started_at,
     to: session.ended_at,
-  });
-  if (search) query.set("search", search);
+  };
+}
+
+export function SessionCard({
+  session,
+  locale,
+  origin,
+  t,
+}: {
+  session: MatchSession;
+  locale: string;
+  origin: Origin;
+  t: Translate;
+}) {
   return (
     <Card
-      href={`/dealmeter/session?${query}`}
+      href={sessionHref(sessionKey(session), origin)}
       tab={t("seriesCount", { count: session.match_count })}
       board={<SessionBoard session={session} t={t} />}
       footer={formatTimeRange(session.started_at, session.ended_at, locale)}

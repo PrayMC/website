@@ -22,7 +22,7 @@ export default function Timeline({
   const remaining = events.length - shown.length;
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 sm:p-6">
+    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 sm:p-6">
       <h2 className="flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-zinc-400 uppercase tracking-wider mb-4 sm:mb-6">
         <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden />
         {t("timeline")}
