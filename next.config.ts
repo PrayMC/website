@@ -1,13 +1,16 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
+if (process.env.NODE_ENV === "production" && !process.env.NEXT_PUBLIC_API_URL) {
+  throw new Error(
+    "NEXT_PUBLIC_API_URL is not set (e.g. https://kitmap-api.planetearth.kr/dealmeter); refusing to build against localhost.",
+  );
+}
+
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  experimental: {
-    optimizePackageImports: ["lucide-react"],
-  },
   images: {
     unoptimized: true,
   },
