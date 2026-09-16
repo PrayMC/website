@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import {
+  AlertTriangle,
   ArrowLeft,
   CalendarDays,
   Clock,
@@ -20,13 +21,13 @@ import {
   Pickaxe,
   Ghost,
   Droplets,
-  Map,
+  Map as MapIcon,
   User,
   type LucideIcon,
 } from "lucide-react";
-import { Link } from "@/i18n/routing";
 import { notFound } from "next/navigation";
-import { setRequestLocale, getTranslations } from "next-intl/server";
+import { StatusMessage, type Translate } from "../../ui";
+import { getTranslations } from "next-intl/server";
 import {
   getMatch,
   getWinners,
@@ -37,7 +38,7 @@ import {
   type MatchDetail,
 } from "@/lib/api";
 import Timeline from "./timeline";
-import MatchStatus from "./match-status";
+import { Link, localeAlternates } from "@/i18n/routing";
 
 const CLASSES: Record<string, { color: string; icon: LucideIcon }> = {
   Diamond: { color: "text-cyan-300", icon: Sword },
@@ -49,14 +50,12 @@ const CLASSES: Record<string, { color: string; icon: LucideIcon }> = {
   Ghost: { color: "text-zinc-400", icon: Ghost },
 };
 
-type Translate = (key: string) => string;
-
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string; id: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
+  const { locale, id } = await params;
   let match: MatchDetail | null = null;
   try {
     match = await getMatch(id);
@@ -64,21 +63,22 @@ export async function generateMetadata({
     return { title: "Pray - Match" };
   }
   if (!match) notFound();
+  const t = await getTranslations("dealmeter");
   const title = `Pray - ${match.team1_name} vs ${match.team2_name} (${match.team1_kills}:${match.team2_kills})`;
-  return { title, openGraph: { title } };
+  return {
+    title,
+    description: t("description"),
+    alternates: localeAlternates(`/dealmeter/match/${encodeURIComponent(match.id)}`, locale),
+    openGraph: { title },
+  };
 }
 
 export default async function MatchDetailPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
-  searchParams: Promise<{ events?: string }>;
 }) {
   const { locale, id } = await params;
-  const { events: eventsStr } = await searchParams;
-  setRequestLocale(locale);
-
   const t = await getTranslations("dealmeter");
   const td = await getTranslations("duration");
   const tc = await getTranslations("classLabels");
@@ -86,26 +86,25 @@ export default async function MatchDetailPage({
   let match: MatchDetail | null = null;
   try {
     match = await getMatch(id);
-  } catch {
-    return <MatchStatus messageKey="loadError" />;
+  } catch (e) {
+    console.error("match fetch failed", e);
+    return (
+      <StatusMessage icon={AlertTriangle} message={t("loadError")} backLabel={t("backToList")} />
+    );
   }
 
   if (!match) notFound();
 
-  const visibleCount = Math.min(
-    Math.max(20, parseInt(eventsStr || "20", 10) || 20),
-    match.events.length,
-  );
   const { team1Won, team2Won, draw } = getWinners(match);
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-6 sm:py-8 font-sans">
+    <main className="page-frame py-6 sm:py-8 font-sans">
       <Link
         href="/dealmeter"
         className="inline-flex items-center gap-1.5 text-zinc-500 hover:text-zinc-300 text-sm mb-6 sm:mb-8 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        {t("list")}
+        {t("backToList")}
       </Link>
 
       <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 sm:p-10 mb-4 sm:mb-6">
@@ -128,7 +127,7 @@ export default async function MatchDetailPage({
             <>
               <span className="text-zinc-800">|</span>
               <span className="inline-flex items-center gap-1.5">
-                <Map className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <MapIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 {match.world_name}
               </span>
             </>
@@ -138,12 +137,7 @@ export default async function MatchDetailPage({
         <div className="flex items-center">
           <div className="flex-1 min-w-0 text-right">
             <div className="flex items-center justify-end gap-2 sm:gap-3">
-              {team1Won && (
-                <span className="shrink-0 inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-base font-black uppercase tracking-widest text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">
-                  <span className="hidden sm:inline">Victory</span>
-                  <Trophy className="w-4 h-4 sm:w-6 sm:h-6" />
-                </span>
-              )}
+              {team1Won && <Victory label={t("victory")} />}
               <span
                 className={`text-lg sm:text-3xl font-bold truncate ${team1Won ? "text-white" : "text-zinc-500"}`}
               >
@@ -180,12 +174,7 @@ export default async function MatchDetailPage({
               >
                 {match.team2_name}
               </span>
-              {team2Won && (
-                <span className="shrink-0 inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-base font-black uppercase tracking-widest text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]">
-                  <Trophy className="w-4 h-4 sm:w-6 sm:h-6" />
-                  <span className="hidden sm:inline">Victory</span>
-                </span>
-              )}
+              {team2Won && <Victory label={t("victory")} flip />}
             </div>
           </div>
         </div>
@@ -211,22 +200,19 @@ export default async function MatchDetailPage({
       </div>
 
       {match.events.length > 0 && (
-        <Timeline
-          events={match.events}
-          matchStart={match.started_at}
-          matchId={match.id}
-          visibleCount={visibleCount}
-        />
+        <Timeline events={match.events} matchStart={match.started_at} />
       )}
     </main>
   );
 }
 
-function WinBadge() {
+function Victory({ label, flip }: { label: string; flip?: boolean }) {
   return (
-    <span className="shrink-0 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded">
-      <Trophy className="w-3 h-3" />
-      WIN
+    <span
+      className={`shrink-0 inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-base font-black uppercase tracking-widest text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)] ${flip ? "flex-row-reverse" : ""}`}
+    >
+      <span className="sr-only sm:not-sr-only">{label}</span>
+      <Trophy className="w-4 h-4 sm:w-6 sm:h-6" aria-hidden />
     </span>
   );
 }
@@ -246,10 +232,10 @@ function TeamPanel({
   t: Translate;
   tc: Translate;
 }) {
-  const accentColor = accent === "cyan" ? "text-cyan-400" : "text-rose-400";
-  const accentBorder =
-    accent === "cyan" ? "border-cyan-500/20" : "border-rose-500/20";
-  const accentBg = accent === "cyan" ? "bg-cyan-500/5" : "bg-rose-500/5";
+  const [accentColor, accentBorder, accentBg] =
+    accent === "cyan"
+      ? ["text-cyan-400", "border-cyan-500/20", "bg-cyan-500/5"]
+      : ["text-rose-400", "border-rose-500/20", "bg-rose-500/5"];
   const totalDamage = players.reduce((sum, p) => sum + Math.round(p.damage), 0);
 
   return (
@@ -263,7 +249,12 @@ function TeamPanel({
             <span className={`text-base sm:text-lg font-bold truncate ${accentColor}`}>
               {teamName}
             </span>
-            {isWinner && <WinBadge />}
+            {isWinner && (
+              <span className="shrink-0 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded">
+                <Trophy className="w-3 h-3" aria-hidden />
+                {t("win")}
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-1.5 text-amber-400 shrink-0">
             <Swords className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-60" />
@@ -303,50 +294,47 @@ function TeamPanel({
 }
 
 function PlayerRow({ player, tc }: { player: MatchPlayer; tc: Translate }) {
-  const cls = CLASSES[player.class_name] ?? CLASSES.Diamond;
+  const known = Object.hasOwn(CLASSES, player.class_name);
+  const cls = known ? CLASSES[player.class_name] : CLASSES.Diamond;
   const isArcher = player.class_name === "Archer";
-  const classLabel = tc(player.class_name);
+  const classLabel = known ? tc(player.class_name) : player.class_name;
 
   return (
     <div className="grid grid-cols-[4fr_repeat(7,1fr)] gap-0.5 sm:gap-1 items-center px-3 sm:px-4 py-2.5 sm:py-3 hover:bg-zinc-800/30 transition-colors">
       <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
         <div className="relative shrink-0">
-          <Image
-            src={getHeadUrl(player.player_uuid, 64)}
-            alt={player.player_name}
-            width={36}
-            height={36}
-            loading="lazy"
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-md"
-            unoptimized
-          />
+          {/* Empty-alt image renders nothing on failure, revealing the icon behind it. */}
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-md bg-zinc-800 overflow-hidden">
+            <User className="absolute inset-0 m-auto w-4 h-4 text-zinc-600" aria-hidden />
+            <Image
+              src={getHeadUrl(player.player_uuid, 64)}
+              alt=""
+              width={36}
+              height={36}
+              loading="lazy"
+              className="relative w-full h-full"
+              unoptimized
+            />
+          </div>
           <div
             className="absolute -bottom-1 -right-1 sm:-bottom-1.5 sm:-right-1.5 w-4.5 h-4.5 sm:w-5.5 sm:h-5.5 rounded-full bg-zinc-900 border border-zinc-700 flex items-center justify-center"
             title={classLabel}
           >
-            <cls.icon className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${cls.color}`} />
+            <cls.icon className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${cls.color}`} aria-label={classLabel} role="img" />
           </div>
         </div>
         <span className="text-xs sm:text-sm font-semibold text-zinc-200 truncate">
           {player.player_name}
         </span>
       </div>
-      <Cell
-        value={player.kills}
-        color={player.kills > 0 ? "text-emerald-400" : undefined}
-      />
-      <Cell
-        value={player.deaths}
-        color={player.deaths > 0 ? "text-red-400" : undefined}
-      />
+      <Cell value={player.kills} color={player.kills > 0 ? "text-emerald-400" : undefined} />
+      <Cell value={player.deaths} color={player.deaths > 0 ? "text-red-400" : undefined} />
       <Cell value={Math.round(player.damage)} color="text-amber-400" />
       <Cell value={player.melee_hits} />
       <Cell value={player.bow_shots} />
       <Cell
         value={isArcher ? player.archer_tags : ""}
-        color={
-          isArcher && player.archer_tags > 0 ? "text-green-400" : "text-transparent"
-        }
+        color={isArcher && player.archer_tags > 0 ? "text-green-400" : undefined}
       />
       <Cell
         value={Math.round(player.splash_heal)}

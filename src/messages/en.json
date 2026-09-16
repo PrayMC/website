@@ -27,7 +27,6 @@
     "next": "Next",
     "matchNotFound": "Match not found.",
     "backToList": "Back to list",
-    "list": "List",
     "player": "Player",
     "kills": "Kills",
     "deaths": "Deaths",
@@ -40,7 +39,13 @@
     "timeline": "Battle Timeline",
     "showMore": "Show more ({remaining} remaining)",
     "title": "Pray - Matches",
-    "description": "View PlanetEarth KITMAP battle records and statistics."
+    "description": "View PlanetEarth KITMAP battle records and statistics.",
+    "seriesCount": "{count, plural, one {# match} other {# matches}}",
+    "totalKills": "Total kills",
+    "seriesNotFound": "Record not found.",
+    "victory": "Victory",
+    "win": "WIN",
+    "winner": "Winner"
   },
   "duration": {
     "hour": "h ",

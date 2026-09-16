@@ -1,6 +1,6 @@
 export default function MatchDetailLoading() {
   return (
-    <main className="max-w-6xl mx-auto px-4 py-6 sm:py-8 animate-pulse">
+    <main className="page-frame py-6 sm:py-8 animate-pulse">
       <div className="h-4 w-16 bg-zinc-800 rounded mb-6 sm:mb-8" />
 
       <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 sm:p-10 mb-4 sm:mb-6">

@@ -1,4 +1,19 @@
+import { cache } from "react";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/dealmeter";
+const TTL_SECONDS = 30;
+const SEOUL = "Asia/Seoul";
+// Same rule as the backend's route guard; the plugin generates 9-char alphanumeric IDs.
+const MATCH_ID_RE = /^[A-Za-z0-9]{1,12}$/;
+// Keeps the backend's OFFSET arithmetic away from bigint overflow.
+export const MAX_PAGE = 100_000;
+
+/** `?a=1&a=2` arrives as an array, so every param is read through `first()`. */
+export type SearchParams = Record<string, string | string[] | undefined>;
+
+export function first(v: SearchParams[string]): string {
+  return (Array.isArray(v) ? v[0] : v) ?? "";
+}
 
 export interface MatchSummary {
   id: string;
@@ -11,6 +26,25 @@ export interface MatchSummary {
   duration_ms: number | string;
   started_at: string;
   ended_at: string;
+}
+
+/** Consecutive matches between the same two teams, grouped by time continuity. */
+export interface MatchSession {
+  team_a: string;
+  team_b: string;
+  match_count: number;
+  team_a_wins: number;
+  team_b_wins: number;
+  team_a_kills: number;
+  team_b_kills: number;
+  started_at: string;
+  ended_at: string;
+  games: MatchSummary[];
+}
+
+export interface SessionListResponse {
+  sessions: MatchSession[];
+  pagination: { page: number; limit: number; total: number; totalPages: number };
 }
 
 export interface MatchPlayer {
@@ -47,38 +81,63 @@ export interface MatchDetail extends MatchSummary {
   events: MatchEventData[];
 }
 
-export interface MatchListResponse {
-  matches: MatchSummary[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
+export interface SessionKey {
+  team1: string;
+  team2: string;
+  from: string;
+  to: string;
 }
 
-export async function getMatches(
+// OpenNext's default incremental cache is a no-op on Cloudflare, so `revalidate`
+// does nothing there; use the Workers Cache API instead and fall back elsewhere.
+async function cachedFetch(url: string): Promise<Response> {
+  const init = { headers: { "User-Agent": "kitmap-website" } }; // the API's WAF rejects UA-less requests
+  const cache = (globalThis as unknown as { caches?: { default?: Cache } }).caches?.default;
+  if (!cache) return fetch(url, { ...init, next: { revalidate: TTL_SECONDS } });
+
+  const key = new Request(url);
+  const hit = await cache.match(key);
+  if (hit) return hit;
+
+  const res = await fetch(url, init);
+  if (res.ok) {
+    const copy = new Response(res.clone().body, res);
+    copy.headers.set("Cache-Control", `public, max-age=${TTL_SECONDS}`);
+    await cache.put(key, copy).catch((e) => console.error("cache.put failed", e));
+  }
+  return res;
+}
+
+export async function getSessions(
   page = 1,
   limit = 20,
   search = "",
-): Promise<MatchListResponse> {
-  const searchQuery = search ? `&search=${encodeURIComponent(search)}` : "";
-  const res = await fetch(`${API_BASE}/matches?page=${page}&limit=${limit}${searchQuery}`, {
-    next: { revalidate: 30 },
-  });
-  if (!res.ok) throw new Error(`Failed to fetch matches (${res.status})`);
-  return res.json();
+  key?: SessionKey,
+): Promise<SessionListResponse> {
+  const q = new URLSearchParams({ page: String(page), limit: String(limit) });
+  if (search) q.set("search", search);
+  if (key) for (const [k, v] of Object.entries(key)) q.set(k, v);
+  const res = await cachedFetch(`${API_BASE}/matches/sessions?${q}`);
+  if (!res.ok) throw new Error(`Failed to fetch sessions (${res.status})`);
+  const data: Partial<SessionListResponse> = await res.json();
+  if (!Array.isArray(data.sessions) || typeof data.pagination?.totalPages !== "number") {
+    throw new Error("Unexpected sessions response shape");
+  }
+  return data as SessionListResponse;
 }
 
-export async function getMatch(id: string): Promise<MatchDetail | null> {
-  if (!/^[\w-]{1,64}$/.test(id)) return null;
-  const res = await fetch(`${API_BASE}/matches/${encodeURIComponent(id)}`, {
-    next: { revalidate: 30 },
-  });
+/** `cache` lets generateMetadata and the page share one fetch per request. */
+export const getMatch = cache(async (id: string): Promise<MatchDetail | null> => {
+  if (!MATCH_ID_RE.test(id)) return null;
+  const res = await cachedFetch(`${API_BASE}/matches/${encodeURIComponent(id)}`);
   if (res.status === 404 || res.status === 400) return null;
   if (!res.ok) throw new Error(`Failed to fetch match (${res.status})`);
-  return res.json();
-}
+  const data: Partial<MatchDetail> = await res.json();
+  if (![data.team1_players, data.team2_players, data.events].every(Array.isArray)) {
+    throw new Error("Unexpected match response shape");
+  }
+  return data as MatchDetail;
+});
 
 export function getWinners(match: MatchSummary) {
   const winner = match.winner_team?.toLowerCase();
@@ -99,10 +158,28 @@ export function formatDuration(
 }
 
 export function formatDate(iso: string, locale: string) {
+  return new Date(iso).toLocaleString(locale, { timeZone: SEOUL, timeZoneName: "short" });
+}
+
+export function formatShortDate(iso: string, locale: string) {
   return new Date(iso).toLocaleString(locale, {
-    timeZone: "Asia/Seoul",
-    timeZoneName: "short",
+    timeZone: SEOUL,
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
+}
+
+/** "9/14 13:09 – 15:02", or with both dates when the range crosses midnight. */
+export function formatTimeRange(startIso: string, endIso: string, locale: string) {
+  const start = new Date(startIso);
+  const end = new Date(endIso);
+  const day = (d: Date) => d.toLocaleDateString(locale, { timeZone: SEOUL });
+  const time = (d: Date) =>
+    d.toLocaleTimeString(locale, { timeZone: SEOUL, hour: "2-digit", minute: "2-digit" });
+  const endLabel = day(start) === day(end) ? time(end) : formatShortDate(endIso, locale);
+  return `${formatShortDate(startIso, locale)} – ${endLabel}`;
 }
 
 export function getHeadUrl(playerUuid: string, size = 64) {

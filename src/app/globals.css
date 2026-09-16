@@ -18,7 +18,10 @@ body {
   color: #ededed;
   font-family: var(--font-sans);
   min-height: 100vh;
-  overflow-x: hidden;
+}
+
+@utility page-frame {
+  @apply w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-10;
 }
 
 .pray-gradient-border {

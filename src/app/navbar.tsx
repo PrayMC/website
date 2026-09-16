@@ -1,14 +1,14 @@
 import Image from "next/image";
 import { Gamepad2, BarChart3 } from "lucide-react";
-import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import LocaleSwitcher from "./locale-switcher";
+import { Link, DISCORD_INVITE } from "@/i18n/routing";
 
 export default async function Navbar() {
   const t = await getTranslations("navbar");
   return (
     <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#0a0a0a]/80 border-b border-zinc-800/60">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="page-frame">
         <div className="flex items-center justify-between h-14">
           <Link href="/" className="flex items-center gap-2 group">
             <Image
@@ -30,7 +30,7 @@ export default async function Navbar() {
               <span className="hidden sm:inline">{t("matchHistory")}</span>
             </Link>
             <a
-              href="https://discord.gg/aTCD3aXPND"
+              href={DISCORD_INVITE}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t("discord")}

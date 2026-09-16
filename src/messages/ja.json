@@ -27,7 +27,6 @@
     "next": "次へ",
     "matchNotFound": "マッチが見つかりません。",
     "backToList": "一覧に戻る",
-    "list": "一覧",
     "player": "プレイヤー",
     "kills": "キル",
     "deaths": "デス",
@@ -40,7 +39,13 @@
     "timeline": "戦闘タイムライン",
     "showMore": "もっと見る（残り{remaining}件）",
     "title": "Pray - マッチ履歴",
-    "description": "PlanetEarth KITMAP の戦闘記録と統計を確認できます。"
+    "description": "PlanetEarth KITMAP の戦闘記録と統計を確認できます。",
+    "seriesCount": "{count}戦",
+    "totalKills": "合計キル",
+    "seriesNotFound": "記録が見つかりません。",
+    "victory": "勝利",
+    "win": "勝",
+    "winner": "勝利チーム"
   },
   "duration": {
     "hour": "時間",
