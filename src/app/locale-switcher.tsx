@@ -4,7 +4,7 @@ import { Globe, ChevronDown } from "lucide-react";
 import { useParams } from "next/navigation";
 import { routing, usePathname, useRouter, type Locale } from "@/i18n/routing";
 
-const localeLabels: Record<(typeof routing.locales)[number], string> = {
+const localeLabels: Record<Locale, string> = {
   ko: "한국어",
   en: "English",
   ja: "日本語",

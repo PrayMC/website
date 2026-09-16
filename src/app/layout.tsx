@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { SITE_URL } from "@/i18n/routing";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kitmap.planetearth.kr"),
+  metadataBase: new URL(SITE_URL),
   title: "Pray",
   description: "Pray - PlanetEarth KITMAP",
   icons: { icon: "/favicon.png" },
