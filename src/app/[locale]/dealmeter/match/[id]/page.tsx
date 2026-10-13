@@ -9,17 +9,16 @@ import {
   Swords,
   Sword,
   Target,
-  Heart,
-  Crosshair,
+  HeartCrack,
   BowArrow,
   Shield,
   Music2,
   Hash,
   Zap,
-  Flame,
+  WandSparkles,
   Pickaxe,
   Ghost,
-  Droplets,
+  FlaskConical,
   Map as MapIcon,
   User,
   type LucideIcon,
@@ -55,7 +54,7 @@ const CLASSES: Record<string, { color: string; icon: LucideIcon }> = {
   Archer: { color: "text-green-400", icon: BowArrow },
   Bard: { color: "text-yellow-400", icon: Music2 },
   Rogue: { color: "text-purple-400", icon: Zap },
-  Mage: { color: "text-orange-400", icon: Flame },
+  Mage: { color: "text-orange-400", icon: WandSparkles },
   Miner: { color: "text-stone-400", icon: Pickaxe },
   Ghost: { color: "text-zinc-400", icon: Ghost },
 };
@@ -292,7 +291,7 @@ function TeamPanel({
               {totalDamage.toLocaleString()}
             </span>
             <span className="flex items-center gap-1.5 text-pink-400" title={t("totalPots")}>
-              <Droplets className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-60" aria-hidden />
+              <FlaskConical className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-60" aria-hidden />
               <span className="sr-only">{t("totalPots")} </span>
               {totalPots.toLocaleString()}
             </span>
@@ -304,12 +303,12 @@ function TeamPanel({
         <div className="grid grid-cols-[4fr_repeat(7,1fr)] gap-0.5 sm:gap-1 px-3 sm:px-4 py-2 sm:py-2.5 text-[9px] sm:text-[10px] uppercase tracking-wider text-zinc-600 font-semibold border-b border-zinc-800/50 min-w-[480px]">
           <StatHeader icon={User} label={t("player")} />
           <StatHeader icon={Skull} label={t("kills")} />
-          <StatHeader icon={Heart} label={t("deaths")} />
+          <StatHeader icon={HeartCrack} label={t("deaths")} />
           <StatHeader icon={Swords} label={t("damage")} />
-          <StatHeader icon={Target} label={t("hits")} />
-          <StatHeader icon={Crosshair} label={t("bow")} />
-          <StatHeader icon={BowArrow} label={t("tag")} className="text-green-500/60" />
-          <StatHeader icon={Droplets} label={t("heal")} className="text-pink-500/60" />
+          <StatHeader icon={Sword} label={t("hits")} />
+          <StatHeader icon={BowArrow} label={t("bow")} />
+          <StatHeader icon={Target} label={t("tag")} className="text-green-500/60" />
+          <StatHeader icon={FlaskConical} label={t("heal")} className="text-pink-500/60" />
         </div>
 
         {players.length === 0 ? (
