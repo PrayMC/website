@@ -285,16 +285,18 @@ function TeamPanel({
             </span>
             {isWinner && <WinnerMark label={t("winner")} />}
           </div>
-          <div className="flex items-center gap-1.5 text-amber-400 shrink-0">
-            <Swords className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-60" />
-            <span className="text-sm sm:text-base font-bold tabular-nums">
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0 text-sm sm:text-base font-bold tabular-nums">
+            <span className="flex items-center gap-1.5 text-amber-400" title={t("damage")}>
+              <Swords className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-60" aria-hidden />
+              <span className="sr-only">{t("damage")} </span>
               {totalDamage.toLocaleString()}
             </span>
+            <span className="flex items-center gap-1.5 text-pink-400" title={t("totalPots")}>
+              <Droplets className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-60" aria-hidden />
+              <span className="sr-only">{t("totalPots")} </span>
+              {totalPots.toLocaleString()}
+            </span>
           </div>
-        </div>
-        <div className="mt-2 flex items-center justify-end gap-1.5 text-xs sm:text-sm text-pink-400 tabular-nums">
-          <Droplets className="w-3.5 h-3.5" aria-hidden />
-          <span>{t("totalPots")} {totalPots.toLocaleString()}</span>
         </div>
       </div>
 

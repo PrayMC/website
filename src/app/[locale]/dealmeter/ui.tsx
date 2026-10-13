@@ -24,7 +24,7 @@ export function CardGrid({ children }: { children: ReactNode }) {
 }
 
 /** Where a card was clicked from, so the detail page's back link can return there. */
-export interface Origin {
+interface Origin {
   search: string;
   page: number;
   session?: SessionKey;
@@ -172,7 +172,7 @@ function PaginationLink({
   );
 }
 
-export function Scoreboard({
+function Scoreboard({
   teamA,
   teamB,
   scoreA,
