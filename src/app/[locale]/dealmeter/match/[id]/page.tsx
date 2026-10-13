@@ -13,7 +13,7 @@ import {
   Crosshair,
   BowArrow,
   Shield,
-  ShieldHalf,
+  Music2,
   Hash,
   Zap,
   Flame,
@@ -53,7 +53,7 @@ import { localeAlternates } from "@/i18n/routing";
 const CLASSES: Record<string, { color: string; icon: LucideIcon }> = {
   Diamond: { color: "text-cyan-300", icon: Sword },
   Archer: { color: "text-green-400", icon: BowArrow },
-  Bard: { color: "text-yellow-400", icon: ShieldHalf },
+  Bard: { color: "text-yellow-400", icon: Music2 },
   Rogue: { color: "text-purple-400", icon: Zap },
   Mage: { color: "text-orange-400", icon: Flame },
   Miner: { color: "text-stone-400", icon: Pickaxe },
