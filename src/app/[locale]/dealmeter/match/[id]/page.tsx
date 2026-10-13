@@ -178,7 +178,7 @@ export default async function MatchDetailPage({
           </div>
           <div className="px-4 sm:px-12 flex items-baseline gap-2 sm:gap-5">
             <span
-              className={`text-3xl sm:text-6xl font-black tabular-nums ${scoreTone(team1Won, draw, "text-cyan-400")}`}
+              className={`text-3xl sm:text-6xl font-black tabular-nums ${scoreTone(team1Won, draw, "text-red-400")}`}
             >
               {match.team1_kills}
             </span>
@@ -186,7 +186,7 @@ export default async function MatchDetailPage({
               :
             </span>
             <span
-              className={`text-3xl sm:text-6xl font-black tabular-nums ${scoreTone(team2Won, draw, "text-rose-400")}`}
+              className={`text-3xl sm:text-6xl font-black tabular-nums ${scoreTone(team2Won, draw, "text-blue-400")}`}
             >
               {match.team2_kills}
             </span>
@@ -208,7 +208,7 @@ export default async function MatchDetailPage({
           teamName={match.team1_name}
           players={match.team1_players}
           isWinner={team1Won}
-          accent="cyan"
+          accent="red"
           t={t}
           tc={tc}
         />
@@ -216,7 +216,7 @@ export default async function MatchDetailPage({
           teamName={match.team2_name}
           players={match.team2_players}
           isWinner={team2Won}
-          accent="rose"
+          accent="blue"
           t={t}
           tc={tc}
         />
@@ -229,7 +229,7 @@ export default async function MatchDetailPage({
   );
 }
 
-// Same tones as the card scoreboard, over the cyan/rose this page gives each team.
+// Same tones as the card scoreboard, over the red/blue this page gives each team.
 const nameTone = (won: boolean, draw: boolean) =>
   draw ? "text-zinc-300" : won ? "text-white" : "text-zinc-500";
 const scoreTone = (won: boolean, draw: boolean, accent: string) =>
@@ -261,14 +261,14 @@ function TeamPanel({
   teamName: string;
   players: MatchPlayer[];
   isWinner: boolean;
-  accent: "cyan" | "rose";
+  accent: "red" | "blue";
   t: Translate;
   tc: Translate;
 }) {
   const [accentColor, accentBorder, accentBg] =
-    accent === "cyan"
-      ? ["text-cyan-400", "border-cyan-500/20", "bg-cyan-500/5"]
-      : ["text-rose-400", "border-rose-500/20", "bg-rose-500/5"];
+    accent === "red"
+      ? ["text-red-400", "border-red-500/20", "bg-red-500/5"]
+      : ["text-blue-400", "border-blue-500/20", "bg-blue-500/5"];
   const totalDamage = players.reduce((sum, p) => sum + Math.round(p.damage), 0);
   const totalPots = players.reduce((sum, p) => sum + p.splash_heal, 0);
 
@@ -329,7 +329,6 @@ function TeamPanel({
 function PlayerRow({ player, tc }: { player: MatchPlayer; tc: Translate }) {
   const known = Object.hasOwn(CLASSES, player.class_name);
   const cls = known ? CLASSES[player.class_name] : CLASSES.Diamond;
-  const isArcher = player.class_name === "Archer";
   const classLabel = known ? tc(player.class_name) : player.class_name;
 
   return (
@@ -366,8 +365,8 @@ function PlayerRow({ player, tc }: { player: MatchPlayer; tc: Translate }) {
       <Cell value={player.melee_hits} />
       <Cell value={player.bow_shots} />
       <Cell
-        value={isArcher ? player.archer_tags : ""}
-        color={isArcher && player.archer_tags > 0 ? "text-green-400" : undefined}
+        value={player.archer_tags}
+        color={player.archer_tags > 0 ? "text-green-400" : undefined}
       />
       <Cell
         value={Math.round(player.splash_heal)}
