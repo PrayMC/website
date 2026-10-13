@@ -35,6 +35,7 @@
     "bow": "활",
     "tag": "태그",
     "heal": "힐",
+    "totalPots": "총 회복 팟",
     "noPlayers": "참가 기록 없음",
     "timeline": "전투 타임라인",
     "showMore": "더 보기 ({remaining}개 남음)",

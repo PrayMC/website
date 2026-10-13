@@ -35,6 +35,7 @@
     "bow": "弓",
     "tag": "タグ",
     "heal": "ヒール",
+    "totalPots": "回復ポーション合計",
     "noPlayers": "参加記録なし",
     "timeline": "戦闘タイムライン",
     "showMore": "もっと見る（残り{remaining}件）",

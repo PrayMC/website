@@ -270,6 +270,7 @@ function TeamPanel({
       ? ["text-cyan-400", "border-cyan-500/20", "bg-cyan-500/5"]
       : ["text-rose-400", "border-rose-500/20", "bg-rose-500/5"];
   const totalDamage = players.reduce((sum, p) => sum + Math.round(p.damage), 0);
+  const totalPots = players.reduce((sum, p) => sum + p.splash_heal, 0);
 
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
@@ -290,6 +291,10 @@ function TeamPanel({
               {totalDamage.toLocaleString()}
             </span>
           </div>
+        </div>
+        <div className="mt-2 flex items-center justify-end gap-1.5 text-xs sm:text-sm text-pink-400 tabular-nums">
+          <Droplets className="w-3.5 h-3.5" aria-hidden />
+          <span>{t("totalPots")} {totalPots.toLocaleString()}</span>
         </div>
       </div>
 

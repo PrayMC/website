@@ -1,6 +1,6 @@
 import { cache } from "react";
 import type { Metadata } from "next";
-import { AlertTriangle, SearchX, FolderOpen, CalendarDays, Skull, Clock } from "lucide-react";
+import { AlertTriangle, SearchX, FolderOpen, CalendarDays, Skull, Clock, Droplets } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import {
   getSessions,
@@ -139,6 +139,12 @@ export default async function SessionPage({
             <Skull className="w-3 h-3" aria-hidden />
             {t("totalKills")} {session.team_a_kills} : {session.team_b_kills}
           </span>
+          {session.team_a_splash_heal !== undefined && session.team_b_splash_heal !== undefined && (
+            <span className="inline-flex items-center gap-1 text-pink-400">
+              <Droplets className="w-3 h-3" aria-hidden />
+              {t("totalPots")} {session.team_a_splash_heal.toLocaleString()} : {session.team_b_splash_heal.toLocaleString()}
+            </span>
+          )}
           <span className="inline-flex items-center gap-1">
             <Clock className="w-3 h-3" aria-hidden />
             {formatDuration(totalMs, td)}

@@ -35,6 +35,7 @@
     "bow": "Bow",
     "tag": "Tag",
     "heal": "Heal",
+    "totalPots": "Total healing pots",
     "noPlayers": "No participants",
     "timeline": "Battle Timeline",
     "showMore": "Show more ({remaining} remaining)",

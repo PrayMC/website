@@ -37,6 +37,8 @@ export interface MatchSession {
   team_b_wins: number;
   team_a_kills: number;
   team_b_kills: number;
+  team_a_splash_heal?: number;
+  team_b_splash_heal?: number;
   started_at: string;
   ended_at: string;
   games: MatchSummary[];
