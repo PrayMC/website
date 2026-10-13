@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { Gamepad2, BarChart3 } from "lucide-react";
+import { BarChart3 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import DiscordIcon from "./discord-icon";
 import LocaleSwitcher from "./locale-switcher";
 import { Link, DISCORD_INVITE } from "@/i18n/routing";
 
@@ -24,6 +25,7 @@ export default async function Navbar() {
           <div className="flex items-center gap-1">
             <Link
               href="/dealmeter"
+              aria-label={t("matchHistory")}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60"
             >
               <BarChart3 className="w-4 h-4" aria-hidden />
@@ -36,7 +38,7 @@ export default async function Navbar() {
               aria-label={t("discord")}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60"
             >
-              <Gamepad2 className="w-4 h-4" aria-hidden />
+              <DiscordIcon className="w-4 h-4" />
               <span className="hidden sm:inline">{t("discord")}</span>
             </a>
             <LocaleSwitcher ariaLabel={t("localeSwitcherLabel")} />

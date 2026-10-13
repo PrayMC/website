@@ -1,6 +1,6 @@
 "use client";
 
-import { Globe, ChevronDown } from "lucide-react";
+import { Languages, ChevronDown } from "lucide-react";
 import { useParams } from "next/navigation";
 import { routing, usePathname, useRouter, type Locale } from "@/i18n/routing";
 
@@ -17,7 +17,7 @@ export default function LocaleSwitcher({ ariaLabel }: { ariaLabel: string }) {
 
   return (
     <div className="ml-1 pl-2 border-l border-zinc-800 flex items-center gap-1">
-      <Globe className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+      <Languages className="w-3.5 h-3.5 text-zinc-500 shrink-0" aria-hidden />
       <div className="relative flex items-center">
         <select
           value={currentLocale}
