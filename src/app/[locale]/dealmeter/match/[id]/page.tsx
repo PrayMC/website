@@ -24,7 +24,17 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { notFound } from "next/navigation";
-import { Page, StatusMessage, BackLink, listHref, sessionHref, type Translate } from "../../ui";
+import {
+  Page,
+  StatusMessage,
+  BackLink,
+  MetaRow,
+  MetaItem,
+  resultTone,
+  listHref,
+  sessionHref,
+  type Translate,
+} from "../../ui";
 import { getTranslations } from "next-intl/server";
 import {
   getMatch,
@@ -122,41 +132,23 @@ export default async function MatchDetailPage({
       </div>
 
       <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 sm:p-10 mb-4 sm:mb-6">
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-zinc-500 text-xs sm:text-sm tabular-nums tracking-wider mb-5 sm:mb-8">
-          <span className="inline-flex items-center gap-1.5 max-w-full">
-            <Hash className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+        <MetaRow>
+          <MetaItem icon={Hash}>
             <span className="break-all">{match.id}</span>
-          </span>
-          <span className="text-zinc-800">|</span>
-          <span
-            className="inline-flex items-center gap-1.5"
-            title={formatDate(match.ended_at, locale)}
-          >
-            <CalendarDays className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          </MetaItem>
+          <MetaItem icon={CalendarDays} title={formatDate(match.ended_at, locale)}>
             {formatTimeRange(match.started_at, match.ended_at, locale)}
-          </span>
-          <span className="text-zinc-800">|</span>
-          <span className="inline-flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            {formatDuration(match.duration_ms, td)}
-          </span>
-          {match.world_name && (
-            <>
-              <span className="text-zinc-800">|</span>
-              <span className="inline-flex items-center gap-1.5">
-                <MapIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                {match.world_name}
-              </span>
-            </>
-          )}
-        </div>
+          </MetaItem>
+          <MetaItem icon={Clock}>{formatDuration(match.duration_ms, td)}</MetaItem>
+          {match.world_name && <MetaItem icon={MapIcon}>{match.world_name}</MetaItem>}
+        </MetaRow>
 
         <div className="flex items-center">
           <div className="flex-1 min-w-0 text-right">
             <div className="flex items-center justify-end gap-2 sm:gap-3">
               {team1Won && <WinnerMark label={t("winner")} hero />}
               <span
-                className={`text-lg sm:text-3xl font-bold truncate ${nameTone(team1Won, draw)}`}
+                className={`text-lg sm:text-3xl font-bold truncate ${resultTone(team1Won, draw)}`}
               >
                 {match.team1_name}
               </span>
@@ -178,7 +170,7 @@ export default async function MatchDetailPage({
           <div className="flex-1 min-w-0 text-left">
             <div className="flex items-center gap-2 sm:gap-3">
               <span
-                className={`text-lg sm:text-3xl font-bold truncate ${nameTone(team2Won, draw)}`}
+                className={`text-lg sm:text-3xl font-bold truncate ${resultTone(team2Won, draw)}`}
               >
                 {match.team2_name}
               </span>
@@ -213,9 +205,6 @@ export default async function MatchDetailPage({
   );
 }
 
-// Same tones as the card scoreboard, over the red/blue this page gives each team.
-const nameTone = (won: boolean, draw: boolean) =>
-  draw ? "text-zinc-300" : won ? "text-white" : "text-zinc-500";
 const scoreTone = (won: boolean, draw: boolean, accent: string) =>
   won || draw ? accent : "text-zinc-500";
 
@@ -308,7 +297,7 @@ function TeamPanel({
 
 function PlayerRow({ player, tc }: { player: MatchPlayer; tc: Translate }) {
   const known = Object.hasOwn(CLASSES, player.class_name);
-  const cls = known ? CLASSES[player.class_name] : CLASSES.Diamond;
+  const cls = known ? CLASSES[player.class_name] : { color: "text-zinc-500", icon: User };
   const classLabel = known ? tc(player.class_name) : player.class_name;
 
   return (

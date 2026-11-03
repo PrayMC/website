@@ -17,6 +17,8 @@ import {
   CardGrid,
   StatusMessage,
   BackLink,
+  MetaRow,
+  MetaItem,
   MatchCard,
   SessionBoard,
   listHref,
@@ -110,28 +112,18 @@ export default async function SessionPage({
         <BackLink href={backHref} label={t("backToList")} />
       </div>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6 mb-8 sm:mb-10">
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-xs text-zinc-500 tabular-nums mb-4">
-          <span className="inline-flex items-center gap-1.5 font-semibold uppercase tracking-wider text-zinc-300">
-            <FolderOpen className="w-3.5 h-3.5" aria-hidden />
-            {t("seriesCount", { count: session.match_count })}
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <CalendarDays className="w-3 h-3" aria-hidden />
+      <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 sm:p-10 mb-8 sm:mb-10">
+        <MetaRow>
+          <MetaItem icon={FolderOpen}>{t("seriesCount", { count: session.match_count })}</MetaItem>
+          <MetaItem icon={CalendarDays}>
             {formatTimeRange(session.started_at, session.ended_at, locale)}
-          </span>
-        </div>
-        <SessionBoard session={session} t={t} large />
-        <div className="mt-4 pt-3 border-t border-zinc-800/70 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-500 tabular-nums">
-          <span className="inline-flex items-center gap-1">
-            <Skull className="w-3 h-3" aria-hidden />
+          </MetaItem>
+          <MetaItem icon={Clock}>{formatDuration(totalMs, td)}</MetaItem>
+          <MetaItem icon={Skull}>
             {t("totalKills")} {session.team_a_kills} : {session.team_b_kills}
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <Clock className="w-3 h-3" aria-hidden />
-            {formatDuration(totalMs, td)}
-          </span>
-        </div>
+          </MetaItem>
+        </MetaRow>
+        <SessionBoard session={session} t={t} large />
       </section>
 
       <CardGrid>

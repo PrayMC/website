@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Children, Fragment, type ReactNode } from "react";
 import { ArrowLeft, ChevronLeft, ChevronRight, Search, type LucideIcon } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import {
@@ -126,6 +126,44 @@ export function StatusMessage(props: {
   );
 }
 
+// A draw keeps both sides at zinc-300 so neither looks like the loser.
+export const resultTone = (won: boolean, draw: boolean) =>
+  draw ? "text-zinc-300" : won ? "text-white" : "text-zinc-500";
+
+export function MetaRow({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 sm:gap-2.5 text-zinc-500 text-xs sm:text-sm tabular-nums tracking-wider mb-5 sm:mb-8">
+      {Children.toArray(children).map((item, i) => (
+        <Fragment key={i}>
+          {i > 0 && (
+            <span className="hidden sm:inline text-zinc-800" aria-hidden>
+              |
+            </span>
+          )}
+          {item}
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+export function MetaItem({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: LucideIcon;
+  title?: string;
+  children: ReactNode;
+}) {
+  return (
+    <span className="inline-flex items-center gap-1.5 max-w-full" title={title}>
+      <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" aria-hidden />
+      {children}
+    </span>
+  );
+}
+
 export function Pagination({
   page,
   totalPages,
@@ -195,13 +233,11 @@ function Scoreboard({
   t: Translate;
   large?: boolean;
 }) {
-  // A draw keeps both sides at zinc-300 so neither looks like the loser.
   const drawn = !wonA && !wonB;
-  const tone = (won: boolean) => (drawn ? "text-zinc-300" : won ? "text-white" : "text-zinc-500");
   const name = (won: boolean) =>
-    `min-w-0 truncate font-semibold ${large ? "text-base sm:text-lg" : "text-sm"} ${tone(won)}`;
+    `min-w-0 truncate font-semibold ${large ? "text-base sm:text-lg" : "text-sm"} ${resultTone(won, drawn)}`;
   const score = (won: boolean) =>
-    `font-bold tabular-nums leading-none ${large ? "text-4xl sm:text-5xl" : "text-2xl"} ${tone(won)}`;
+    `font-bold tabular-nums leading-none ${large ? "text-4xl sm:text-5xl" : "text-2xl"} ${resultTone(won, drawn)}`;
   const dot = (
     <>
       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" aria-hidden />
