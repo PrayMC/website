@@ -4,8 +4,9 @@ import { AlertTriangle, SearchX, FolderOpen, CalendarDays, Skull, Clock } from "
 import { getTranslations } from "next-intl/server";
 import {
   getSessions,
-  first,
-  MAX_PAGE,
+  parsePage,
+  parseSearch,
+  parseSessionKey,
   formatDuration,
   formatTimeRange,
   type MatchSession,
@@ -40,21 +41,8 @@ const loadSession = cache(
 );
 
 function load(q: SearchParams) {
-  const team1 = first(q.team1).trim().slice(0, 64);
-  const team2 = first(q.team2).trim().slice(0, 64);
-  const fromMs = Date.parse(first(q.from));
-  const toMs = Date.parse(first(q.to));
-  if (!team1 || !team2 || Number.isNaN(fromMs) || Number.isNaN(toMs) || fromMs > toMs) {
-    return null;
-  }
-  // Re-serialized so the backend's ::timestamptz cast only ever sees ISO 8601.
-  return loadSession(
-    team1,
-    team2,
-    new Date(fromMs).toISOString(),
-    new Date(toMs).toISOString(),
-    first(q.search).trim().slice(0, 64),
-  );
+  const key = parseSessionKey(q);
+  return key && loadSession(key.team1, key.team2, key.from, key.to, parseSearch(q));
 }
 
 export async function generateMetadata({
@@ -85,8 +73,8 @@ export default async function SessionPage({
   const t = await getTranslations("dealmeter");
   const td = await getTranslations("duration");
   const q = await searchParams;
-  const search = first(q.search).trim().slice(0, 64);
-  const page = Math.min(MAX_PAGE, Math.max(1, parseInt(first(q.page), 10) || 1));
+  const search = parseSearch(q);
+  const page = parsePage(q);
   const backHref = listHref(search, page);
 
   let session;

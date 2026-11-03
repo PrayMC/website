@@ -29,8 +29,9 @@ import { getTranslations } from "next-intl/server";
 import {
   getMatch,
   getWinners,
-  first,
-  MAX_PAGE,
+  parsePage,
+  parseSearch,
+  parseSessionKey,
   formatDuration,
   formatDate,
   formatTimeRange,
@@ -77,21 +78,10 @@ export async function generateMetadata({
 
 /** The series or list page the card was clicked from, re-validated before it becomes a link. */
 function resolveBack(q: SearchParams, t: Translate) {
-  const search = first(q.search).trim().slice(0, 64);
-  const page = Math.min(MAX_PAGE, Math.max(1, parseInt(first(q.page), 10) || 1));
-  const [team1, team2] = [first(q.team1).trim().slice(0, 64), first(q.team2).trim().slice(0, 64)];
-  const [fromMs, toMs] = [Date.parse(first(q.from)), Date.parse(first(q.to))];
-  const origin = { search, page };
-  if (team1 && team2 && !Number.isNaN(fromMs) && !Number.isNaN(toMs) && fromMs <= toMs) {
-    const key = {
-      team1,
-      team2,
-      from: new Date(fromMs).toISOString(),
-      to: new Date(toMs).toISOString(),
-    };
-    return { href: sessionHref(key, origin), label: t("backToSeries") };
-  }
-  return { href: listHref(search, page), label: t("backToList") };
+  const origin = { search: parseSearch(q), page: parsePage(q) };
+  const key = parseSessionKey(q);
+  if (key) return { href: sessionHref(key, origin), label: t("backToSeries") };
+  return { href: listHref(origin.search, origin.page), label: t("backToList") };
 }
 
 export default async function MatchDetailPage({

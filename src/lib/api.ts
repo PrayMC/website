@@ -11,8 +11,28 @@ export const MAX_PAGE = 100_000;
 /** `?a=1&a=2` arrives as an array, so every param is read through `first()`. */
 export type SearchParams = Record<string, string | string[] | undefined>;
 
-export function first(v: SearchParams[string]): string {
+function first(v: SearchParams[string]): string {
   return (Array.isArray(v) ? v[0] : v) ?? "";
+}
+
+export const MAX_QUERY_LENGTH = 64;
+
+const text = (v: SearchParams[string]) => first(v).trim().slice(0, MAX_QUERY_LENGTH);
+
+export function parseSearch(q: SearchParams) {
+  return text(q.search);
+}
+
+export function parsePage(q: SearchParams) {
+  return Math.min(MAX_PAGE, Math.max(1, parseInt(first(q.page), 10) || 1));
+}
+
+/** Re-serialized so the backend's ::timestamptz cast only ever sees ISO 8601. */
+export function parseSessionKey(q: SearchParams): SessionKey | null {
+  const [team1, team2] = [text(q.team1), text(q.team2)];
+  const [fromMs, toMs] = [Date.parse(first(q.from)), Date.parse(first(q.to))];
+  if (!team1 || !team2 || Number.isNaN(fromMs) || Number.isNaN(toMs) || fromMs > toMs) return null;
+  return { team1, team2, from: new Date(fromMs).toISOString(), to: new Date(toMs).toISOString() };
 }
 
 export interface MatchSummary {

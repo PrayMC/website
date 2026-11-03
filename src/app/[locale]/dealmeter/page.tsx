@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inbox, AlertTriangle, SearchX } from "lucide-react";
 import { redirect, localeAlternates, type Locale } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
-import { getSessions, first, MAX_PAGE, type SearchParams } from "@/lib/api";
+import { getSessions, parsePage, parseSearch, type SearchParams } from "@/lib/api";
 import {
   PAGE_SIZE,
   Page,
@@ -32,8 +32,8 @@ export default async function DealMeterPage({ params, searchParams }: Props) {
   const { locale } = await params;
   const t = await getTranslations("dealmeter");
   const query = await searchParams;
-  const page = Math.min(MAX_PAGE, Math.max(1, parseInt(first(query.page), 10) || 1));
-  const search = first(query.search).trim().slice(0, 64);
+  const page = parsePage(query);
+  const search = parseSearch(query);
 
   let data;
   try {

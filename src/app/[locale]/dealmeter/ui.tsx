@@ -4,6 +4,7 @@ import { Link } from "@/i18n/routing";
 import {
   getWinners,
   formatTimeRange,
+  MAX_QUERY_LENGTH,
   type MatchSummary,
   type MatchSession,
   type SessionKey,
@@ -79,7 +80,7 @@ export function SearchForm({
           type="search"
           name="search"
           defaultValue={search}
-          maxLength={64}
+          maxLength={MAX_QUERY_LENGTH}
           placeholder={placeholder}
           aria-label={placeholder}
           className="w-full h-9 pl-9 pr-3 text-sm rounded-md bg-transparent border border-zinc-800 text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus-visible:border-zinc-500 focus-visible:ring-1 focus-visible:ring-zinc-500 transition-colors"
