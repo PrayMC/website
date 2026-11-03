@@ -82,7 +82,7 @@ export function SearchForm({
           maxLength={MAX_QUERY_LENGTH}
           placeholder={placeholder}
           aria-label={placeholder}
-          className="w-full h-9 pl-9 pr-3 text-sm rounded-md bg-transparent border border-zinc-800 text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus-visible:border-zinc-500 focus-visible:ring-1 focus-visible:ring-zinc-500 transition-colors"
+          className="w-full h-9 pl-9 pr-3 text-sm rounded-lg bg-transparent border border-zinc-800 text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus-visible:border-zinc-500 focus-visible:ring-1 focus-visible:ring-zinc-500 transition-colors"
         />
       </div>
     </form>
@@ -201,7 +201,7 @@ function PaginationLink({
   children: ReactNode;
 }) {
   const cls =
-    "inline-flex items-center justify-center w-9 h-9 rounded-md border border-zinc-800 text-zinc-400 transition-colors";
+    "inline-flex items-center justify-center w-9 h-9 rounded-lg border border-zinc-800 text-zinc-400 transition-colors";
   if (!href) return <span className={`${cls} opacity-30`}>{children}</span>;
   return (
     <Link

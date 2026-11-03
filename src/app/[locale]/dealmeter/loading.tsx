@@ -25,11 +25,11 @@ export default function DealMeterLoading() {
   return (
     <Page>
       <div className="flex items-center justify-between gap-4 mb-6 sm:mb-8 motion-safe:animate-pulse">
-        <div className="h-9 w-full max-w-xs border border-zinc-800 rounded-md" />
+        <div className="h-9 w-full max-w-xs border border-zinc-800 rounded-lg" />
         <div className="flex items-center gap-2">
-          <div className="w-9 h-9 border border-zinc-800 rounded-md" />
+          <div className="w-9 h-9 border border-zinc-800 rounded-lg" />
           <div className="h-4 w-14 bg-zinc-800 rounded" />
-          <div className="w-9 h-9 border border-zinc-800 rounded-md" />
+          <div className="w-9 h-9 border border-zinc-800 rounded-lg" />
         </div>
       </div>
       <CardGrid>
