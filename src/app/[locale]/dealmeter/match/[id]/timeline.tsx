@@ -22,14 +22,14 @@ export default function Timeline({
   const remaining = events.length - shown.length;
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 sm:p-6">
+    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 sm:p-6">
       <h2 className="flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-zinc-400 uppercase tracking-wider mb-4 sm:mb-6">
         <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden />
         {t("timeline")}
         <span className="text-zinc-500 font-normal normal-case">({events.length})</span>
       </h2>
       <div className="relative pl-5 sm:pl-6">
-        <div className="absolute left-[5px] sm:left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-zinc-700 via-zinc-800 to-transparent" />
+        <div className="absolute left-[9px] sm:left-[12px] -translate-x-1/2 top-2 bottom-2 w-px bg-gradient-to-b from-zinc-700 via-zinc-800 to-transparent" />
         <div className="space-y-2.5 sm:space-y-3">
           {shown.map((e) => {
             const sec =
