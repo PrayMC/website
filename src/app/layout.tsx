@@ -9,8 +9,6 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.png" },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: ReactNode }>) {
+export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return children;
 }

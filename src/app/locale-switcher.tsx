@@ -25,9 +25,7 @@ export default function LocaleSwitcher({ ariaLabel }: { ariaLabel: string }) {
             router.replace(
               {
                 pathname,
-                query: Object.fromEntries(
-                  new URLSearchParams(window.location.search),
-                ),
+                query: Object.fromEntries(new URLSearchParams(window.location.search)),
               },
               { locale: e.target.value as Locale },
             )
@@ -41,7 +39,10 @@ export default function LocaleSwitcher({ ariaLabel }: { ariaLabel: string }) {
             </option>
           ))}
         </select>
-        <ChevronDown className="absolute right-0 w-3 h-3 text-zinc-500 pointer-events-none" aria-hidden />
+        <ChevronDown
+          className="absolute right-0 w-3 h-3 text-zinc-500 pointer-events-none"
+          aria-hidden
+        />
       </div>
     </div>
   );

@@ -28,10 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function DealMeterPage({
-  params,
-  searchParams,
-}: Props) {
+export default async function DealMeterPage({ params, searchParams }: Props) {
   const { locale } = await params;
   const t = await getTranslations("dealmeter");
   const query = await searchParams;

@@ -24,14 +24,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { notFound } from "next/navigation";
-import {
-  Page,
-  StatusMessage,
-  BackLink,
-  listHref,
-  sessionHref,
-  type Translate,
-} from "../../ui";
+import { Page, StatusMessage, BackLink, listHref, sessionHref, type Translate } from "../../ui";
 import { getTranslations } from "next-intl/server";
 import {
   getMatch,
@@ -146,7 +139,10 @@ export default async function MatchDetailPage({
             <span className="break-all">{match.id}</span>
           </span>
           <span className="text-zinc-800">|</span>
-          <span className="inline-flex items-center gap-1.5" title={formatDate(match.ended_at, locale)}>
+          <span
+            className="inline-flex items-center gap-1.5"
+            title={formatDate(match.ended_at, locale)}
+          >
             <CalendarDays className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             {formatTimeRange(match.started_at, match.ended_at, locale)}
           </span>
@@ -170,7 +166,9 @@ export default async function MatchDetailPage({
           <div className="flex-1 min-w-0 text-right">
             <div className="flex items-center justify-end gap-2 sm:gap-3">
               {team1Won && <WinnerMark label={t("winner")} hero />}
-              <span className={`text-lg sm:text-3xl font-bold truncate ${nameTone(team1Won, draw)}`}>
+              <span
+                className={`text-lg sm:text-3xl font-bold truncate ${nameTone(team1Won, draw)}`}
+              >
                 {match.team1_name}
               </span>
             </div>
@@ -181,9 +179,7 @@ export default async function MatchDetailPage({
             >
               {match.team1_kills}
             </span>
-            <span className="text-zinc-700 text-base sm:text-xl font-bold">
-              :
-            </span>
+            <span className="text-zinc-700 text-base sm:text-xl font-bold">:</span>
             <span
               className={`text-3xl sm:text-6xl font-black tabular-nums ${scoreTone(team2Won, draw, "text-blue-400")}`}
             >
@@ -192,7 +188,9 @@ export default async function MatchDetailPage({
           </div>
           <div className="flex-1 min-w-0 text-left">
             <div className="flex items-center gap-2 sm:gap-3">
-              <span className={`text-lg sm:text-3xl font-bold truncate ${nameTone(team2Won, draw)}`}>
+              <span
+                className={`text-lg sm:text-3xl font-bold truncate ${nameTone(team2Won, draw)}`}
+              >
                 {match.team2_name}
               </span>
               {team2Won && <WinnerMark label={t("winner")} hero flip />}
@@ -221,9 +219,7 @@ export default async function MatchDetailPage({
         />
       </div>
 
-      {match.events.length > 0 && (
-        <Timeline events={match.events} matchStart={match.started_at} />
-      )}
+      {match.events.length > 0 && <Timeline events={match.events} matchStart={match.started_at} />}
     </Page>
   );
 }
@@ -273,9 +269,7 @@ function TeamPanel({
 
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
-      <div
-        className={`px-4 sm:px-5 py-3 sm:py-4 border-b ${accentBorder} ${accentBg}`}
-      >
+      <div className={`px-4 sm:px-5 py-3 sm:py-4 border-b ${accentBorder} ${accentBg}`}>
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 min-w-0">
             <Shield className={`w-4 h-4 sm:w-5 sm:h-5 shrink-0 ${accentColor}`} />
@@ -312,9 +306,7 @@ function TeamPanel({
         </div>
 
         {players.length === 0 ? (
-          <div className="px-5 py-12 text-center text-zinc-500 text-sm">
-            {t("noPlayers")}
-          </div>
+          <div className="px-5 py-12 text-center text-zinc-500 text-sm">{t("noPlayers")}</div>
         ) : (
           <div className="divide-y divide-zinc-800/50 min-w-[480px]">
             {players.map((p) => (
@@ -353,7 +345,11 @@ function PlayerRow({ player, tc }: { player: MatchPlayer; tc: Translate }) {
             className="absolute -bottom-1 -right-1 sm:-bottom-1.5 sm:-right-1.5 w-4.5 h-4.5 sm:w-5.5 sm:h-5.5 rounded-full bg-zinc-900 border border-zinc-700 flex items-center justify-center"
             title={classLabel}
           >
-            <cls.icon className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${cls.color}`} aria-label={classLabel} role="img" />
+            <cls.icon
+              className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${cls.color}`}
+              aria-label={classLabel}
+              role="img"
+            />
           </div>
         </div>
         <span className="text-xs sm:text-sm font-semibold text-zinc-200 truncate">

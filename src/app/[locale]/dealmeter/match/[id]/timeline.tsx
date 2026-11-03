@@ -26,9 +26,7 @@ export default function Timeline({
       <h2 className="flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-zinc-400 uppercase tracking-wider mb-4 sm:mb-6">
         <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden />
         {t("timeline")}
-        <span className="text-zinc-500 font-normal normal-case">
-          ({events.length})
-        </span>
+        <span className="text-zinc-500 font-normal normal-case">({events.length})</span>
       </h2>
       <div className="relative pl-5 sm:pl-6">
         <div className="absolute left-[5px] sm:left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-zinc-700 via-zinc-800 to-transparent" />
@@ -45,17 +43,11 @@ export default function Timeline({
                 </span>
                 <div className="flex-1 min-w-0 bg-zinc-800/50 border border-zinc-800 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3">
                   <span className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm flex-wrap">
-                    <strong className="text-emerald-400">
-                      {e.actor_name ?? unknown}
-                    </strong>
+                    <strong className="text-emerald-400">{e.actor_name ?? unknown}</strong>
                     <Swords className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-zinc-600" aria-hidden />
-                    <strong className="text-red-400">
-                      {e.target_name ?? unknown}
-                    </strong>
+                    <strong className="text-red-400">{e.target_name ?? unknown}</strong>
                     {e.weapon && (
-                      <span className="text-zinc-500 text-[10px] sm:text-xs">
-                        ({e.weapon})
-                      </span>
+                      <span className="text-zinc-500 text-[10px] sm:text-xs">({e.weapon})</span>
                     )}
                   </span>
                 </div>

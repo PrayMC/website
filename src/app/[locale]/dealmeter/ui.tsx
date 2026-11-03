@@ -166,7 +166,11 @@ function PaginationLink({
     "inline-flex items-center justify-center w-9 h-9 rounded-md border border-zinc-800 text-zinc-400 transition-colors";
   if (!href) return <span className={`${cls} opacity-30`}>{children}</span>;
   return (
-    <Link href={href} aria-label={label} className={`${cls} hover:text-zinc-100 hover:border-zinc-600`}>
+    <Link
+      href={href}
+      aria-label={label}
+      className={`${cls} hover:text-zinc-100 hover:border-zinc-600`}
+    >
       {children}
     </Link>
   );

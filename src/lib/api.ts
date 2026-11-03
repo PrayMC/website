@@ -146,10 +146,7 @@ export function getWinners(match: MatchSummary) {
   return { team1Won, team2Won, draw: !team1Won && !team2Won };
 }
 
-export function formatDuration(
-  ms: number | string,
-  t: (key: "hour" | "min" | "sec") => string,
-) {
+export function formatDuration(ms: number | string, t: (key: "hour" | "min" | "sec") => string) {
   const n = Number(ms);
   const total = Number.isFinite(n) && n > 0 ? Math.floor(n / 1000) : 0;
   const h = Math.floor(total / 3600);

@@ -6,7 +6,11 @@ const subscribe = () => () => {};
 
 // `year` is what the server rendered; the client swaps in its own after hydration.
 export default function Footer({ year }: { year: number }) {
-  const shown = useSyncExternalStore(subscribe, () => new Date().getFullYear(), () => year);
+  const shown = useSyncExternalStore(
+    subscribe,
+    () => new Date().getFullYear(),
+    () => year,
+  );
   return (
     <footer className="border-t border-zinc-800 py-6 mt-8">
       <div className="page-frame flex flex-col md:flex-row justify-between items-center gap-3 md:gap-0 text-zinc-500 text-sm">

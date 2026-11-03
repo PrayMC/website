@@ -29,10 +29,7 @@ export default function MatchDetailLoading() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
           {Array.from({ length: 2 }).map((_, i) => (
-            <div
-              key={i}
-              className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden"
-            >
+            <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
               <div className="px-4 sm:px-5 py-3 sm:py-4 border-b border-zinc-800">
                 <div className="h-5 w-28 bg-zinc-800 rounded" />
               </div>

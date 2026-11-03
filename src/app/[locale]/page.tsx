@@ -52,9 +52,7 @@ export default async function HomePage() {
           className="w-44 h-44 sm:w-72 sm:h-72 mb-8"
           priority
         />
-        <h1 className="text-5xl sm:text-7xl font-black tracking-tight mb-6 text-[#b9d9fb]">
-          Pray
-        </h1>
+        <h1 className="text-5xl sm:text-7xl font-black tracking-tight mb-6 text-[#b9d9fb]">Pray</h1>
         <p className="text-zinc-500 text-base">PlanetEarth KITMAP</p>
       </div>
 
