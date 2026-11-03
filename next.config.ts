@@ -10,6 +10,7 @@ if (process.env.NODE_ENV === "production" && !process.env.NEXT_PUBLIC_API_URL) {
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
+  agentRules: false,
   poweredByHeader: false,
   images: {
     unoptimized: true,
