@@ -3,6 +3,8 @@
 @theme inline {
   --color-background: #0a0a0a;
   --color-foreground: #ededed;
+  --color-brand: #b9d9fb;
+  --color-brand-hover: #d0e5fd;
   --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
 }
@@ -12,8 +14,7 @@ html {
 }
 
 body {
-  background: #0a0a0a;
-  color: #ededed;
+  @apply bg-background text-foreground;
   font-family: var(--font-sans);
 }
 

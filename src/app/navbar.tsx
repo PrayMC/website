@@ -8,7 +8,7 @@ import { Link, DISCORD_INVITE } from "@/i18n/routing";
 export default async function Navbar() {
   const t = await getTranslations("navbar");
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#0a0a0a]/80 border-b border-zinc-800/60">
+    <nav className="sticky top-0 z-50 backdrop-blur-xl bg-background/80 border-b border-zinc-800/60">
       <div className="page-frame">
         <div className="flex items-center justify-between h-14">
           <Link href="/" className="flex items-center gap-2 group">
@@ -19,7 +19,7 @@ export default async function Navbar() {
               height={36}
               className="w-9 h-9 shrink-0"
             />
-            <span className="text-lg font-extrabold text-[#b9d9fb]">Pray</span>
+            <span className="text-lg font-extrabold text-brand">Pray</span>
           </Link>
 
           <div className="flex items-center gap-1">

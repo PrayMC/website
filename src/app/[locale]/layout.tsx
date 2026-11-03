@@ -37,11 +37,11 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className="dark antialiased">
-      <body className="min-h-dvh bg-[#0a0a0a] text-zinc-100 flex flex-col">
+      <body className="min-h-dvh flex flex-col">
         <NextIntlClientProvider>
           <Navbar />
           <div className="flex-1">{children}</div>
-          <Footer year={new Date().getFullYear()} />
+          <Footer />
         </NextIntlClientProvider>
       </body>
     </html>
