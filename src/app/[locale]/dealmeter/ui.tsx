@@ -74,7 +74,7 @@ export function SearchForm({
   return (
     <form action={action} method="get" className="flex-1 min-w-0">
       <div className="relative max-w-xs">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600 pointer-events-none" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
         <input
           type="search"
           name="search"
@@ -82,7 +82,7 @@ export function SearchForm({
           maxLength={64}
           placeholder={placeholder}
           aria-label={placeholder}
-          className="w-full h-9 pl-9 pr-3 text-sm rounded-md bg-transparent border border-zinc-800 text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+          className="w-full h-9 pl-9 pr-3 text-sm rounded-md bg-transparent border border-zinc-800 text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus-visible:border-zinc-500 focus-visible:ring-1 focus-visible:ring-zinc-500 transition-colors"
         />
       </div>
     </form>
@@ -101,7 +101,7 @@ export function StatusBody({
   backHref?: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-zinc-600">
+    <div className="flex flex-col items-center justify-center py-24 text-zinc-500">
       <Icon className="w-12 h-12 mb-4 text-zinc-700" />
       <p className="text-base">{message}</p>
       {backLabel && (

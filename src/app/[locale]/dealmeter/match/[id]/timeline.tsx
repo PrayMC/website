@@ -26,7 +26,7 @@ export default function Timeline({
       <h2 className="flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-zinc-400 uppercase tracking-wider mb-4 sm:mb-6">
         <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden />
         {t("timeline")}
-        <span className="text-zinc-600 font-normal normal-case">
+        <span className="text-zinc-500 font-normal normal-case">
           ({events.length})
         </span>
       </h2>
@@ -40,7 +40,7 @@ export default function Timeline({
             return (
               <div key={e.id} className="relative flex items-center gap-2.5 sm:gap-4">
                 <div className="absolute -left-[15px] sm:-left-[17px] w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-zinc-700 border-2 border-zinc-900 z-10" />
-                <span className="text-[10px] sm:text-xs text-zinc-600 tabular-nums w-10 sm:w-12 shrink-0">
+                <span className="text-[10px] sm:text-xs text-zinc-500 tabular-nums w-10 sm:w-12 shrink-0">
                   {timeStr}
                 </span>
                 <div className="flex-1 min-w-0 bg-zinc-800/50 border border-zinc-800 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3">
@@ -53,7 +53,7 @@ export default function Timeline({
                       {e.target_name ?? unknown}
                     </strong>
                     {e.weapon && (
-                      <span className="text-zinc-600 text-[10px] sm:text-xs">
+                      <span className="text-zinc-500 text-[10px] sm:text-xs">
                         ({e.weapon})
                       </span>
                     )}

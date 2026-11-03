@@ -140,7 +140,7 @@ export default async function MatchDetailPage({
       </div>
 
       <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 sm:p-10 mb-4 sm:mb-6">
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-zinc-600 text-xs sm:text-sm tabular-nums tracking-wider mb-5 sm:mb-8">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-zinc-500 text-xs sm:text-sm tabular-nums tracking-wider mb-5 sm:mb-8">
           <span className="inline-flex items-center gap-1.5 max-w-full">
             <Hash className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
             <span className="break-all">{match.id}</span>
@@ -300,7 +300,7 @@ function TeamPanel({
       </div>
 
       <div className="overflow-x-auto">
-        <div className="grid grid-cols-[4fr_repeat(7,1fr)] gap-0.5 sm:gap-1 px-3 sm:px-4 py-2 sm:py-2.5 text-[9px] sm:text-[10px] uppercase tracking-wider text-zinc-600 font-semibold border-b border-zinc-800/50 min-w-[480px]">
+        <div className="grid grid-cols-[4fr_repeat(7,1fr)] gap-0.5 sm:gap-1 px-3 sm:px-4 py-2 sm:py-2.5 text-[10px] uppercase tracking-wider text-zinc-500 font-semibold border-b border-zinc-800/50 min-w-[480px]">
           <StatHeader icon={User} label={t("player")} />
           <StatHeader icon={Skull} label={t("kills")} />
           <StatHeader icon={HeartCrack} label={t("deaths")} />
@@ -312,7 +312,7 @@ function TeamPanel({
         </div>
 
         {players.length === 0 ? (
-          <div className="px-5 py-12 text-center text-zinc-700 text-sm">
+          <div className="px-5 py-12 text-center text-zinc-500 text-sm">
             {t("noPlayers")}
           </div>
         ) : (

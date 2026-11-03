@@ -3,7 +3,7 @@ import { Page } from "../../ui";
 export default function MatchDetailLoading() {
   return (
     <Page>
-      <div className="animate-pulse">
+      <div className="motion-safe:animate-pulse">
         <div className="h-4 w-16 bg-zinc-800 rounded mb-6 sm:mb-8" />
 
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 sm:p-10 mb-4 sm:mb-6">
