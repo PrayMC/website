@@ -3,15 +3,9 @@ import Image from "next/image";
 import DiscordIcon from "../discord-icon";
 import { BarChart3, Globe } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Link, DISCORD_INVITE, localeAlternates, type Locale } from "@/i18n/routing";
+import { Link, DISCORD_INVITE, localeAlternates } from "@/i18n/routing";
 
 const META_TITLE = "Pray - PlanetEarth KITMAP";
-
-const metaDescriptions: Record<Locale, string> = {
-  ko: "PlanetEarth KITMAP 팀의 공식 사이트. 매치 기록과 전투 통계를 확인하세요.",
-  en: "Official site for PlanetEarth KITMAP team Pray. View match history and battle statistics.",
-  ja: "PlanetEarth KITMAP チーム Pray の公式サイト。マッチ履歴と戦闘統計を確認できます。",
-};
 
 export async function generateMetadata({
   params,
@@ -19,7 +13,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const description = metaDescriptions[locale as Locale] ?? metaDescriptions.ko;
+  const description = (await getTranslations("home"))("metaDescription");
   return {
     title: META_TITLE,
     description,
@@ -52,7 +46,7 @@ export default async function HomePage() {
           className="w-44 h-44 sm:w-72 sm:h-72 mb-8"
           priority
         />
-        <h1 className="text-5xl sm:text-7xl font-black tracking-tight mb-6 text-[#b9d9fb]">Pray</h1>
+        <h1 className="text-5xl sm:text-7xl font-black tracking-tight mb-6 text-brand">Pray</h1>
         <p className="text-zinc-500 text-base">PlanetEarth KITMAP</p>
       </div>
 

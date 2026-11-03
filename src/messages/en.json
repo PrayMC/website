@@ -10,7 +10,8 @@
     "discord": "Discord",
     "discordDesc": "Join the community",
     "planetearth": "PlanetEarth",
-    "planetearthDesc": "Official site"
+    "planetearthDesc": "Official site",
+    "metaDescription": "Official site for PlanetEarth KITMAP team Pray. View match history and battle statistics."
   },
   "notFound": {
     "title": "Page not found.",

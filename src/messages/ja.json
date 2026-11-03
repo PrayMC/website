@@ -10,7 +10,8 @@
     "discord": "Discord",
     "discordDesc": "コミュニティに参加",
     "planetearth": "PlanetEarth",
-    "planetearthDesc": "公式サイト"
+    "planetearthDesc": "公式サイト",
+    "metaDescription": "PlanetEarth KITMAP チーム Pray の公式サイト。マッチ履歴と戦闘統計を確認できます。"
   },
   "notFound": {
     "title": "ページが見つかりません。",
