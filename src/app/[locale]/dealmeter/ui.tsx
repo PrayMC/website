@@ -24,7 +24,6 @@ export function CardGrid({ children }: { children: ReactNode }) {
   );
 }
 
-/** Where a card was clicked from, so the detail page's back link can return there. */
 interface Origin {
   search: string;
   page: number;
@@ -196,8 +195,7 @@ function Scoreboard({
   t: Translate;
   large?: boolean;
 }) {
-  // No dot on either side is what marks a draw, so it needs no label and no card stands taller
-  // than its row; zinc-300 keeps both sides level rather than dimming them as though both lost.
+  // A draw keeps both sides at zinc-300 so neither looks like the loser.
   const drawn = !wonA && !wonB;
   const tone = (won: boolean) => (drawn ? "text-zinc-300" : won ? "text-white" : "text-zinc-500");
   const name = (won: boolean) =>

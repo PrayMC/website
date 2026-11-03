@@ -76,7 +76,6 @@ export async function generateMetadata({
   };
 }
 
-/** The series or list page the card was clicked from, re-validated before it becomes a link. */
 function resolveBack(q: SearchParams, t: Translate) {
   const origin = { search: parseSearch(q), page: parsePage(q) };
   const key = parseSessionKey(q);
@@ -220,7 +219,6 @@ const nameTone = (won: boolean, draw: boolean) =>
 const scoreTone = (won: boolean, draw: boolean, accent: string) =>
   won || draw ? accent : "text-zinc-500";
 
-/** `hero` is the big mark over the scoreboard; the plain one badges a team panel. */
 function WinnerMark({ label, hero, flip }: { label: string; hero?: boolean; flip?: boolean }) {
   return (
     <span
@@ -228,7 +226,6 @@ function WinnerMark({ label, hero, flip }: { label: string; hero?: boolean; flip
         hero ? "text-xs sm:text-base" : "text-[10px]"
       } ${flip ? "flex-row-reverse" : ""}`}
     >
-      {/* Only the hero has room for the word, and only once it is past the phone breakpoint. */}
       <span className={hero ? "sr-only sm:not-sr-only" : "sr-only"}>{label}</span>
       <Trophy className={hero ? "w-4 h-4 sm:w-6 sm:h-6" : "w-3.5 h-3.5"} aria-hidden />
     </span>
