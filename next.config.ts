@@ -12,6 +12,9 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const nextConfig: NextConfig = {
   agentRules: false,
   poweredByHeader: false,
+  experimental: {
+    agentUpgrade: "security",
+  },
   images: {
     unoptimized: true,
   },
