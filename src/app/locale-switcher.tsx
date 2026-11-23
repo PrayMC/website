@@ -10,6 +10,7 @@ const LOCALE_LABELS: Record<Locale, string> = {
   ko: "한국어",
   en: "English",
   ja: "日本語",
+  zh: "简体中文",
 };
 
 // Not a <select>: navigating on change would switch pages as a keyboard user arrows (WCAG 3.2.2).
