@@ -1,23 +1,14 @@
-import { Children, Fragment, type ReactNode } from "react";
-import {
-  ArrowLeft,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-  Trophy,
-  type LucideIcon,
-} from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { Children, Fragment, type ComponentProps, type ReactNode } from "react";
+import { ArrowLeft, Trophy, type LucideIcon } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import {
   getWinners,
   formatTimeRange,
-  MAX_QUERY_LENGTH,
   type MatchSummary,
   type MatchSession,
   type SessionKey,
 } from "@/lib/api";
-
-export type Translate = (key: string, values?: Record<string, string | number>) => string;
 
 export const PAGE_SIZE = 12;
 
@@ -52,18 +43,13 @@ export function sessionHref(key: SessionKey, origin: Origin) {
   return `/dealmeter/session${withOrigin(new URLSearchParams({ ...key }), origin)}`;
 }
 
-function matchHref(id: string, origin: Origin) {
-  const q = new URLSearchParams(origin.session ? { ...origin.session } : {});
-  return `/dealmeter/match/${encodeURIComponent(id)}${withOrigin(q, origin)}`;
-}
-
 export function BackLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
       className="inline-flex items-center gap-1.5 pointer-coarse:py-3 pointer-coarse:-my-3 text-sm text-zinc-400 hover:text-zinc-100 transition-colors"
     >
-      <ArrowLeft className="w-4 h-4" aria-hidden />
+      <ArrowLeft className="w-4 h-4" />
       {label}
     </Link>
   );
@@ -78,45 +64,17 @@ export function BackLinkSkeleton() {
   );
 }
 
-export function SearchForm({
-  action,
-  search,
-  placeholder,
-}: {
-  action: string;
-  search: string;
-  placeholder: string;
-}) {
-  return (
-    <form action={action} method="get" className="flex-1 min-w-0">
-      <div className="relative max-w-xs">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
-        <input
-          type="search"
-          name="search"
-          defaultValue={search}
-          maxLength={MAX_QUERY_LENGTH}
-          placeholder={placeholder}
-          aria-label={placeholder}
-          className="w-full h-9 pointer-coarse:h-11 pl-9 pr-3 text-sm rounded-lg bg-transparent border border-zinc-800 text-zinc-200 placeholder:text-muted focus-visible:border-zinc-500 transition-colors"
-        />
-      </div>
-    </form>
-  );
-}
-
 export function StatusBody({
   icon: Icon,
   message,
   backLabel,
   backHref = "/dealmeter",
-  heading = false,
+  heading,
 }: {
   icon: LucideIcon;
   message: string;
   backLabel?: string;
   backHref?: string;
-  /** Set when the message is the whole page, so it becomes the page's h1. */
   heading?: boolean;
 }) {
   const Message = heading ? "h1" : "p";
@@ -133,12 +91,7 @@ export function StatusBody({
   );
 }
 
-export function StatusMessage(props: {
-  icon: LucideIcon;
-  message: string;
-  backLabel?: string;
-  backHref?: string;
-}) {
+export function StatusMessage(props: ComponentProps<typeof StatusBody>) {
   return (
     <Page>
       <StatusBody {...props} heading />
@@ -178,64 +131,9 @@ export function MetaItem({
 }) {
   return (
     <span className="inline-flex items-center gap-1.5 max-w-full" title={title}>
-      <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" aria-hidden />
+      <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
       {children}
     </span>
-  );
-}
-
-export function Pagination({
-  page,
-  totalPages,
-  href,
-  t,
-}: {
-  page: number;
-  totalPages: number;
-  href: (p: number) => string;
-  t: Translate;
-}) {
-  if (totalPages <= 1) return null;
-  return (
-    <div className="flex items-center gap-2 shrink-0">
-      <PaginationLink href={page > 1 ? href(page - 1) : null} label={t("prev")}>
-        <ChevronLeft className="w-4 h-4" />
-      </PaginationLink>
-      <span className="min-w-14 text-center text-sm text-zinc-400 tabular-nums">
-        {page} / {totalPages}
-      </span>
-      <PaginationLink href={page < totalPages ? href(page + 1) : null} label={t("next")}>
-        <ChevronRight className="w-4 h-4" />
-      </PaginationLink>
-    </div>
-  );
-}
-
-function PaginationLink({
-  href,
-  label,
-  children,
-}: {
-  href: string | null;
-  label: string;
-  children: ReactNode;
-}) {
-  const cls =
-    "inline-flex items-center justify-center w-9 h-9 pointer-coarse:w-11 pointer-coarse:h-11 rounded-lg border border-zinc-800 text-zinc-400 transition-colors";
-  if (!href)
-    return (
-      <span className={`${cls} opacity-30`} aria-hidden>
-        {children}
-      </span>
-    );
-  return (
-    <Link
-      href={href}
-      aria-label={label}
-      className={`${cls} hover:text-zinc-100 hover:border-zinc-600`}
-    >
-      {children}
-    </Link>
   );
 }
 
@@ -255,7 +153,7 @@ export function WinnerMark({
       } ${flip ? "flex-row-reverse" : ""}`}
     >
       <span className={hero ? undefined : "sr-only"}>{label}</span>
-      <Trophy className={hero ? "w-4 h-4 sm:w-6 sm:h-6" : "w-3.5 h-3.5"} aria-hidden />
+      <Trophy className={hero ? "w-4 h-4 sm:w-6 sm:h-6" : "w-3.5 h-3.5"} />
     </span>
   );
 }
@@ -267,8 +165,7 @@ function Scoreboard({
   scoreB,
   wonA,
   wonB,
-  t,
-  large = false,
+  large,
 }: {
   teamA: string;
   teamB: string;
@@ -276,14 +173,14 @@ function Scoreboard({
   scoreB: number;
   wonA: boolean;
   wonB: boolean;
-  t: Translate;
   large?: boolean;
 }) {
-  const drawn = !wonA && !wonB;
+  const t = useTranslations("dealmeter");
+  const draw = !wonA && !wonB;
   const name = (won: boolean) =>
-    `min-w-0 truncate font-semibold ${large ? "text-base sm:text-lg" : "text-sm"} ${resultTone(won, drawn)}`;
+    `min-w-0 truncate font-semibold ${large ? "text-base sm:text-lg" : "text-sm"} ${resultTone(won, draw)}`;
   const score = (won: boolean) =>
-    `font-bold tabular-nums leading-none ${large ? "text-4xl sm:text-5xl" : "text-2xl"} ${resultTone(won, drawn)}`;
+    `font-bold tabular-nums leading-none ${large ? "text-4xl sm:text-5xl" : "text-2xl"} ${resultTone(won, draw)}`;
   const mark = <WinnerMark label={t("winner")} />;
   // Under 20rem of its own width, one team per row: side by side, a name would get ~50px.
   return (
@@ -309,13 +206,13 @@ function Scoreboard({
           <span className={name(wonB)}>{teamB}</span>
         </div>
       </div>
-      {drawn && <span className="sr-only">{t("draw")}</span>}
+      {draw && <span className="sr-only">{t("draw")}</span>}
     </div>
   );
 }
 
 // `pt-4` reserves the folder-tab space on every card so grid rows stay aligned.
-function Card({
+export function Card({
   href,
   tab,
   board,
@@ -350,7 +247,6 @@ export function CardSkeleton() {
   return (
     <div className="pt-4 motion-safe:animate-pulse">
       <div className="@container rounded-xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6">
-        {/* Same 20rem switch as Scoreboard: stacked rows when narrow, one line when wide. */}
         <div className="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-2 @xs:hidden">
           <div className="h-4 w-20 bg-zinc-800 rounded" />
           <div className="h-6 w-5 bg-zinc-800 rounded" />
@@ -376,19 +272,17 @@ export function CardSkeleton() {
 
 export function MatchCard({
   match,
-  locale,
   origin,
-  t,
   leftTeam,
 }: {
   match: MatchSummary;
-  locale: string;
   origin: Origin;
-  t: Translate;
   /** In a series, the team to keep on the left so wins can be counted down a column. */
   leftTeam?: string;
 }) {
+  const locale = useLocale();
   const { team1Won, team2Won } = getWinners(match);
+  const q = new URLSearchParams(origin.session ? { ...origin.session } : {});
   const sides = [
     { name: match.team1_name, kills: match.team1_kills, won: team1Won },
     { name: match.team2_name, kills: match.team2_kills, won: team2Won },
@@ -397,7 +291,7 @@ export function MatchCard({
   const [a, b] = sides;
   return (
     <Card
-      href={matchHref(match.id, origin)}
+      href={`/dealmeter/match/${encodeURIComponent(match.id)}${withOrigin(q, origin)}`}
       board={
         <Scoreboard
           teamA={a.name}
@@ -406,7 +300,6 @@ export function MatchCard({
           scoreB={b.kills}
           wonA={a.won}
           wonB={b.won}
-          t={t}
         />
       }
       footer={formatTimeRange(match.started_at, match.ended_at, locale)}
@@ -414,15 +307,7 @@ export function MatchCard({
   );
 }
 
-export function SessionBoard({
-  session,
-  t,
-  large = false,
-}: {
-  session: MatchSession;
-  t: Translate;
-  large?: boolean;
-}) {
+export function SessionBoard({ session, large }: { session: MatchSession; large?: boolean }) {
   return (
     <Scoreboard
       teamA={session.team_a}
@@ -431,7 +316,6 @@ export function SessionBoard({
       scoreB={session.team_b_wins}
       wonA={session.team_a_wins > session.team_b_wins}
       wonB={session.team_b_wins > session.team_a_wins}
-      t={t}
       large={large}
     />
   );
@@ -444,25 +328,4 @@ export function sessionKey(session: MatchSession): SessionKey {
     from: session.started_at,
     to: session.ended_at,
   };
-}
-
-export function SessionCard({
-  session,
-  locale,
-  origin,
-  t,
-}: {
-  session: MatchSession;
-  locale: string;
-  origin: Origin;
-  t: Translate;
-}) {
-  return (
-    <Card
-      href={sessionHref(sessionKey(session), origin)}
-      tab={t("seriesCount", { count: session.match_count })}
-      board={<SessionBoard session={session} t={t} />}
-      footer={formatTimeRange(session.started_at, session.ended_at, locale)}
-    />
-  );
 }

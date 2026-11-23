@@ -5,9 +5,7 @@
     "localeSwitcherLabel": "언어 선택"
   },
   "home": {
-    "matchHistory": "매치 기록",
     "matchHistoryDesc": "전투 통계 확인",
-    "discord": "디스코드",
     "discordDesc": "커뮤니티 참여",
     "planetearth": "PlanetEarth",
     "planetearthDesc": "공식 사이트",

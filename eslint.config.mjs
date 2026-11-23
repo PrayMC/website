@@ -6,4 +6,6 @@ export default defineConfig([
   ...nextVitals,
   ...nextTs,
   globalIgnores([".open-next/**", ".wrangler/**"]),
+  // Workers serves images unoptimized, so next/image only adds client JS.
+  { rules: { "@next/next/no-img-element": "off" } },
 ]);

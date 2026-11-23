@@ -16,7 +16,6 @@ export default function MatchDetailLoading() {
             <div className="h-4 sm:h-5 w-17.5 sm:w-20 bg-zinc-800 rounded" />
             <div className="h-4 sm:h-5 w-13 sm:w-14.5 bg-zinc-800 rounded" />
           </div>
-          {/* Mirrors the hero: one team per row below lg. */}
           <div className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-2 lg:hidden">
             <div className="h-6 sm:h-8 w-32 sm:w-48 bg-zinc-800 rounded" />
             <div className="h-9 sm:h-15 w-7 sm:w-10 bg-zinc-800 rounded" />

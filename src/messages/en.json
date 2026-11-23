@@ -5,9 +5,7 @@
     "localeSwitcherLabel": "Select language"
   },
   "home": {
-    "matchHistory": "Matches",
     "matchHistoryDesc": "View battle statistics",
-    "discord": "Discord",
     "discordDesc": "Join the community",
     "planetearth": "PlanetEarth",
     "planetearthDesc": "Official site",

@@ -5,9 +5,7 @@
     "localeSwitcherLabel": "言語を選択"
   },
   "home": {
-    "matchHistory": "マッチ履歴",
     "matchHistoryDesc": "戦闘統計を確認",
-    "discord": "Discord",
     "discordDesc": "コミュニティに参加",
     "planetearth": "PlanetEarth",
     "planetearthDesc": "公式サイト",

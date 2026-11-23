@@ -8,9 +8,10 @@ const intl = createMiddleware(routing);
 // Report-Only until the console is quiet, then rename to "Content-Security-Policy".
 const CSP_HEADER = "Content-Security-Policy-Report-Only";
 
-function buildCsp(nonce: string) {
+export default function middleware(request: NextRequest) {
+  const nonce = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(16))));
   const dev = process.env.NODE_ENV === "development"; // dev bundles need eval
-  return [
+  const csp = [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${dev ? " 'unsafe-eval'" : ""}`,
     "style-src 'self' 'unsafe-inline'",
@@ -22,11 +23,6 @@ function buildCsp(nonce: string) {
     "form-action 'self'",
     "object-src 'none'",
   ].join("; ");
-}
-
-export default function middleware(request: NextRequest) {
-  const nonce = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(16))));
-  const csp = buildCsp(nonce);
   // Next reads the nonce from the *request* header and stamps it on its inline scripts.
   const headers = new Headers(request.headers);
   headers.set(CSP_HEADER, csp);

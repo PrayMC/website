@@ -3,19 +3,17 @@
 import { useState } from "react";
 import { ArrowRight, Clock } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { MatchEventData } from "@/lib/api";
+import type { MatchEvent } from "@/lib/api";
 
 const PAGE = 20;
-const TEAM_TONE = { 1: "text-team-1", 2: "text-team-2" } as const;
 
 export default function Timeline({
   events,
   matchStart,
   sides,
 }: {
-  events: MatchEventData[];
+  events: MatchEvent[];
   matchStart: string;
-  /** Player UUID to team number, so names wear their team's color like a game kill feed. */
   sides: Record<string, 1 | 2>;
 }) {
   const t = useTranslations("dealmeter");
@@ -24,12 +22,13 @@ export default function Timeline({
   const startMs = new Date(matchStart).getTime();
   const shown = events.slice(0, visible);
   const remaining = events.length - shown.length;
-  const tone = (uuid: string | null) => (uuid && TEAM_TONE[sides[uuid]]) || "text-zinc-300";
+  const tone = (uuid: string | null) =>
+    (uuid && { 1: "text-team-1", 2: "text-team-2" }[sides[uuid]]) || "text-zinc-300";
 
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 sm:p-6">
       <h2 className="flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-zinc-400 uppercase tracking-wider mb-4 sm:mb-6">
-        <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden />
+        <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         {t("timeline")}
         <span className="text-muted font-normal normal-case">({events.length})</span>
       </h2>

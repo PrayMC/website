@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 
-export default async function NotFoundPage() {
+export default async function LocaleNotFound() {
   const t = await getTranslations("notFound");
   return (
     <main className="max-w-3xl mx-auto px-4 py-24 text-center">

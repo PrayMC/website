@@ -1,6 +1,6 @@
 import { cache } from "react";
 import type { Metadata } from "next";
-import { AlertTriangle, SearchX, FolderOpen, CalendarDays, Skull, Clock } from "lucide-react";
+import { TriangleAlert, SearchX, FolderOpen, CalendarDays, Skull, Clock } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import {
   getSessions,
@@ -25,6 +25,8 @@ import {
   sessionKey,
 } from "../ui";
 
+type Props = { params: Promise<{ locale: string }>; searchParams: Promise<SearchParams> };
+
 // Keyed by (teams, time window) rather than a stable ID, so never indexed.
 const noindex = (title: string): Metadata => ({ title, robots: { index: false } });
 
@@ -47,11 +49,7 @@ function load(q: SearchParams) {
   return key && loadSession(key.team1, key.team2, key.from, key.to, parseSearch(q));
 }
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}): Promise<Metadata> {
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const q = await searchParams; // outside the try: Next signals dynamic rendering by throwing
   const t = await getTranslations("dealmeter");
   try {
@@ -64,13 +62,7 @@ export async function generateMetadata({
   }
 }
 
-export default async function SessionPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ locale: string }>;
-  searchParams: Promise<SearchParams>;
-}) {
+export default async function SessionPage({ params, searchParams }: Props) {
   const { locale } = await params;
   const t = await getTranslations("dealmeter");
   const td = await getTranslations("duration");
@@ -86,7 +78,7 @@ export default async function SessionPage({
     console.error("session fetch failed", e);
     return (
       <StatusMessage
-        icon={AlertTriangle}
+        icon={TriangleAlert}
         message={t("loadError")}
         backLabel={t("backToList")}
         backHref={backHref}
@@ -126,7 +118,7 @@ export default async function SessionPage({
             {t("totalKills")} {session.team_a_kills} : {session.team_b_kills}
           </MetaItem>
         </MetaRow>
-        <SessionBoard session={session} t={t} large />
+        <SessionBoard session={session} large />
       </section>
 
       <CardGrid>
@@ -134,9 +126,7 @@ export default async function SessionPage({
           <MatchCard
             key={match.id}
             match={match}
-            locale={locale}
             origin={{ search, page, session: sessionKey(session) }}
-            t={t}
             leftTeam={session.team_a}
           />
         ))}

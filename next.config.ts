@@ -15,9 +15,6 @@ const withNextIntl = createNextIntlPlugin({
 export default withNextIntl({
   agentRules: false,
   poweredByHeader: false,
-  images: {
-    unoptimized: true,
-  },
   async headers() {
     return [
       {

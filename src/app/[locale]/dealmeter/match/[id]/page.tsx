@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { notFound } from "next/navigation";
+import { getMessages, getTranslations } from "next-intl/server";
+import { NextIntlClientProvider, useTranslations } from "next-intl";
 import {
-  AlertTriangle,
+  TriangleAlert,
   CalendarDays,
   Clock,
   Skull,
@@ -11,31 +13,17 @@ import {
   HeartCrack,
   BowArrow,
   Shield,
-  Music2,
+  EighthNote,
   Hash,
   Zap,
   WandSparkles,
   Pickaxe,
   Ghost,
   FlaskConical,
-  Map as MapIcon,
+  MapIcon,
   User,
   type LucideIcon,
 } from "lucide-react";
-import { notFound } from "next/navigation";
-import {
-  Page,
-  StatusMessage,
-  BackLink,
-  MetaRow,
-  MetaItem,
-  resultTone,
-  WinnerMark,
-  listHref,
-  sessionHref,
-  type Translate,
-} from "../../ui";
-import { getTranslations } from "next-intl/server";
 import {
   getMatch,
   getWinners,
@@ -47,30 +35,44 @@ import {
   formatTimeRange,
   getHeadUrl,
   type MatchPlayer,
-  type MatchDetail,
   type SearchParams,
 } from "@/lib/api";
-import Timeline from "./timeline";
 import { localeAlternates } from "@/i18n/routing";
+import {
+  Page,
+  StatusMessage,
+  BackLink,
+  MetaRow,
+  MetaItem,
+  resultTone,
+  WinnerMark,
+  listHref,
+  sessionHref,
+} from "../../ui";
+import Timeline from "./timeline";
+
+type Props = {
+  params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<SearchParams>;
+};
 
 const CLASSES: Record<string, { color: string; icon: LucideIcon }> = {
   Diamond: { color: "text-cyan-300", icon: Sword },
   Archer: { color: "text-green-400", icon: BowArrow },
-  Bard: { color: "text-yellow-400", icon: Music2 },
+  Bard: { color: "text-yellow-400", icon: EighthNote },
   Rogue: { color: "text-purple-400", icon: Zap },
   Mage: { color: "text-orange-400", icon: WandSparkles },
   Miner: { color: "text-stone-400", icon: Pickaxe },
   Ghost: { color: "text-zinc-400", icon: Ghost },
 };
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string; id: string }>;
-}): Promise<Metadata> {
+// Opaque so scrolled stats pass under it; the edge line only shows where the table can scroll.
+const STICKY = "sticky left-0 z-10 bg-zinc-900 max-sm:shadow-[1px_0_0_var(--color-zinc-800)]";
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, id } = await params;
   const t = await getTranslations("dealmeter");
-  let match: MatchDetail | null = null;
+  let match;
   try {
     match = await getMatch(id);
   } catch {
@@ -86,34 +88,28 @@ export async function generateMetadata({
   };
 }
 
-function resolveBack(q: SearchParams, t: Translate) {
-  const origin = { search: parseSearch(q), page: parsePage(q) };
-  const key = parseSessionKey(q);
-  if (key) return { href: sessionHref(key, origin), label: t("backToSeries") };
-  return { href: listHref(origin.search, origin.page), label: t("backToList") };
-}
-
-export default async function MatchDetailPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ locale: string; id: string }>;
-  searchParams: Promise<SearchParams>;
-}) {
+export default async function MatchDetailPage({ params, searchParams }: Props) {
   const { locale, id } = await params;
   const t = await getTranslations("dealmeter");
   const td = await getTranslations("duration");
-  const tc = await getTranslations("classLabels");
-  const back = resolveBack(await searchParams, t);
+  const { timeline, unknownPlayer, killEvent, showMore } = (
+    (await getMessages()) as Record<string, Record<string, string>>
+  ).dealmeter;
+  const q = await searchParams;
+  const origin = { search: parseSearch(q), page: parsePage(q) };
+  const key = parseSessionKey(q);
+  const back = key
+    ? { href: sessionHref(key, origin), label: t("backToSeries") }
+    : { href: listHref(origin.search, origin.page), label: t("backToList") };
 
-  let match: MatchDetail | null = null;
+  let match;
   try {
     match = await getMatch(id);
   } catch (e) {
     console.error("match fetch failed", e);
     return (
       <StatusMessage
-        icon={AlertTriangle}
+        icon={TriangleAlert}
         message={t("loadError")}
         backLabel={back.label}
         backHref={back.href}
@@ -185,30 +181,32 @@ export default async function MatchDetailPage({
         <TeamPanel
           teamName={match.team1_name}
           players={match.team1_players}
-          isWinner={team1Won}
-          accent="red"
-          t={t}
-          tc={tc}
+          won={team1Won}
+          team={1}
         />
         <TeamPanel
           teamName={match.team2_name}
           players={match.team2_players}
-          isWinner={team2Won}
-          accent="blue"
-          t={t}
-          tc={tc}
+          won={team2Won}
+          team={2}
         />
       </div>
 
       {match.events.length > 0 && (
-        <Timeline
-          events={match.events}
-          matchStart={match.started_at}
-          sides={Object.fromEntries([
-            ...match.team1_players.map((p) => [p.player_uuid, 1] as const),
-            ...match.team2_players.map((p) => [p.player_uuid, 2] as const),
-          ])}
-        />
+        <NextIntlClientProvider
+          messages={{
+            dealmeter: { timeline, unknownPlayer, killEvent, showMore },
+          }}
+        >
+          <Timeline
+            events={match.events}
+            matchStart={match.started_at}
+            sides={Object.fromEntries([
+              ...match.team1_players.map((p) => [p.player_uuid, 1] as const),
+              ...match.team2_players.map((p) => [p.player_uuid, 2] as const),
+            ])}
+          />
+        </NextIntlClientProvider>
       )}
     </Page>
   );
@@ -220,20 +218,17 @@ const scoreTone = (won: boolean, draw: boolean, accent: string) =>
 function TeamPanel({
   teamName,
   players,
-  isWinner,
-  accent,
-  t,
-  tc,
+  won,
+  team,
 }: {
   teamName: string;
   players: MatchPlayer[];
-  isWinner: boolean;
-  accent: "red" | "blue";
-  t: Translate;
-  tc: Translate;
+  won: boolean;
+  team: 1 | 2;
 }) {
+  const t = useTranslations("dealmeter");
   const [accentColor, accentBorder, accentBg] =
-    accent === "red"
+    team === 1
       ? ["text-team-1", "border-team-1/20", "bg-team-1/5"]
       : ["text-team-2", "border-team-2/20", "bg-team-2/5"];
   const totalDamage = players.reduce((sum, p) => sum + Math.round(p.damage), 0);
@@ -247,16 +242,16 @@ function TeamPanel({
           <div className="flex items-center gap-2 min-w-0">
             <Shield className={`w-4 h-4 sm:w-5 sm:h-5 shrink-0 ${accentColor}`} />
             <h2 className={`text-base sm:text-lg font-bold truncate ${accentColor}`}>{teamName}</h2>
-            {isWinner && <WinnerMark label={t("winner")} />}
+            {won && <WinnerMark label={t("winner")} />}
           </div>
           <div className="ml-auto flex items-center gap-3 sm:gap-4 shrink-0 text-sm sm:text-base font-bold tabular-nums">
             <span className="flex items-center gap-1.5 text-zinc-100" title={t("damage")}>
-              <Swords className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-60" aria-hidden />
+              <Swords className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-60" />
               <span className="sr-only">{t("damage")} </span>
               {totalDamage.toLocaleString()}
             </span>
             <span className="flex items-center gap-1.5 text-pink-400" title={t("totalPots")}>
-              <FlaskConical className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-60" aria-hidden />
+              <FlaskConical className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-60" />
               <span className="sr-only">{t("totalPots")} </span>
               {totalPots.toLocaleString()}
             </span>
@@ -297,7 +292,7 @@ function TeamPanel({
                 </td>
               </tr>
             ) : (
-              players.map((p) => <PlayerRow key={p.id} player={p} tc={tc} />)
+              players.map((p) => <PlayerRow key={p.id} player={p} />)
             )}
           </tbody>
         </table>
@@ -306,7 +301,8 @@ function TeamPanel({
   );
 }
 
-function PlayerRow({ player, tc }: { player: MatchPlayer; tc: Translate }) {
+function PlayerRow({ player }: { player: MatchPlayer }) {
+  const tc = useTranslations("classLabels");
   const known = Object.hasOwn(CLASSES, player.class_name);
   const cls = known ? CLASSES[player.class_name] : { color: "text-zinc-500", icon: User };
   const classLabel = known ? tc(player.class_name) : player.class_name;
@@ -321,15 +317,15 @@ function PlayerRow({ player, tc }: { player: MatchPlayer; tc: Translate }) {
           <div className="relative shrink-0">
             {/* Empty-alt image renders nothing on failure, revealing the icon behind it. */}
             <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-md bg-zinc-800 overflow-hidden">
-              <User className="absolute inset-0 m-auto w-4 h-4 text-zinc-600" aria-hidden />
-              <Image
-                src={getHeadUrl(player.player_uuid, 64)}
+              <User className="absolute inset-0 m-auto w-4 h-4 text-zinc-600" />
+              <img
+                src={getHeadUrl(player.player_uuid)}
                 alt=""
                 width={36}
                 height={36}
                 loading="lazy"
+                decoding="async"
                 className="relative w-full h-full"
-                unoptimized
               />
             </div>
             <div
@@ -358,9 +354,6 @@ function PlayerRow({ player, tc }: { player: MatchPlayer; tc: Translate }) {
     </tr>
   );
 }
-
-// Opaque so scrolled stats pass under it; the edge line only shows where the table can scroll.
-const STICKY = "sticky left-0 z-10 bg-zinc-900 max-sm:shadow-[1px_0_0_var(--color-zinc-800)]";
 
 function StatHeader({
   icon: Icon,

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { defineRouting } from "next-intl/routing";
 import { createNavigation } from "next-intl/navigation";
 
@@ -9,21 +8,17 @@ export const routing = defineRouting({
 
 export type Locale = (typeof routing.locales)[number];
 
-export const { Link, usePathname, useRouter, redirect } = createNavigation(routing);
+export const { Link, usePathname, redirect } = createNavigation(routing);
 
 export const SITE_URL = "https://kitmap.planetearth.kr";
 export const DISCORD_INVITE = "https://discord.gg/aTCD3aXPND";
 
-/** hreflang set for one path (e.g. "/dealmeter"), plus a self-canonical when `canonicalLocale` is given. */
-export function localeAlternates(
-  path: string,
-  canonicalLocale?: string,
-): NonNullable<Metadata["alternates"]> {
+export function localeAlternates(path: string, locale: string) {
   return {
-    ...(canonicalLocale && { canonical: `/${canonicalLocale}${path}` }),
+    canonical: `${SITE_URL}/${locale}${path}`,
     languages: Object.fromEntries([
-      ...routing.locales.map((l) => [l, `/${l}${path}`]),
-      ["x-default", `/${routing.defaultLocale}${path}`],
+      ...routing.locales.map((l) => [l, `${SITE_URL}/${l}${path}`]),
+      ["x-default", `${SITE_URL}/${routing.defaultLocale}${path}`],
     ]),
   };
 }

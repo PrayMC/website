@@ -34,7 +34,7 @@ export default function SessionLoading() {
         </div>
       </div>
       <CardGrid>
-        {Array.from({ length: 3 }, (_, i) => (
+        {Array.from({ length: 3 }).map((_, i) => (
           <CardSkeleton key={i} />
         ))}
       </CardGrid>

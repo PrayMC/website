@@ -6,16 +6,14 @@ import { useLocale } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { routing, Link, usePathname, type Locale } from "@/i18n/routing";
 
-const localeLabels: Record<Locale, string> = {
+const LOCALE_LABELS: Record<Locale, string> = {
   ko: "한국어",
   en: "English",
   ja: "日本語",
 };
 
-// A menu button, not a <select>: a select that navigates on change switches pages as soon as
-// a keyboard user arrows through it (WCAG 3.2.2). Items are reached with arrow keys, because
-// macOS browsers leave links out of the Tab order by default.
-export default function LocaleSwitcher({ ariaLabel }: { ariaLabel: string }) {
+// Not a <select>: navigating on change would switch pages as a keyboard user arrows (WCAG 3.2.2).
+export default function LocaleSwitcher({ label }: { label: string }) {
   const currentLocale = useLocale() as Locale;
   const pathname = usePathname();
   const query = Object.fromEntries(useSearchParams());
@@ -33,6 +31,7 @@ export default function LocaleSwitcher({ ariaLabel }: { ariaLabel: string }) {
     setOpen(true);
   };
 
+  // Arrow keys, not Tab: macOS browsers leave links out of the Tab order by default.
   const onMenuKeyDown = (e: React.KeyboardEvent) => {
     const n = routing.locales.length;
     const i = itemRefs.current.indexOf(document.activeElement as HTMLAnchorElement);
@@ -94,20 +93,18 @@ export default function LocaleSwitcher({ ariaLabel }: { ariaLabel: string }) {
         }}
         className="flex items-center gap-1.5 px-1.5 py-1.5 pointer-coarse:min-h-11 text-xs font-medium text-zinc-400 hover:text-zinc-100 cursor-pointer rounded-lg hover:bg-zinc-800/60 transition-colors"
       >
-        {/* Inside the button so tapping the icon opens the menu too. */}
-        <Languages className="w-3.5 h-3.5 text-zinc-500 shrink-0" aria-hidden />
-        <span className="sr-only">{ariaLabel}: </span>
-        {localeLabels[currentLocale]}
+        <Languages className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+        <span className="sr-only">{label}: </span>
+        {LOCALE_LABELS[currentLocale]}
         <ChevronDown
           className={`w-3 h-3 text-zinc-500 motion-safe:transition-transform ${open ? "rotate-180" : ""}`}
-          aria-hidden
         />
       </button>
       {open && (
         <ul
           id={menuId}
           role="menu"
-          aria-label={ariaLabel}
+          aria-label={label}
           onKeyDown={onMenuKeyDown}
           className="absolute right-0 top-full mt-2 min-w-28 py-1 rounded-lg border border-zinc-800 bg-zinc-900 shadow-lg shadow-black/40"
         >
@@ -130,7 +127,7 @@ export default function LocaleSwitcher({ ariaLabel }: { ariaLabel: string }) {
                   loc === currentLocale ? "text-zinc-100 font-semibold" : "text-zinc-400"
                 }`}
               >
-                {localeLabels[loc]}
+                {LOCALE_LABELS[loc]}
               </Link>
             </li>
           ))}

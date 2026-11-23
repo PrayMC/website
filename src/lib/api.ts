@@ -48,7 +48,6 @@ export interface MatchSummary {
   ended_at: string;
 }
 
-/** Consecutive matches between the same two teams, grouped by time continuity. */
 export interface MatchSession {
   team_a: string;
   team_b: string;
@@ -64,15 +63,13 @@ export interface MatchSession {
 
 interface SessionListResponse {
   sessions: MatchSession[];
-  pagination: { page: number; limit: number; total: number; totalPages: number };
+  pagination: { totalPages: number };
 }
 
 export interface MatchPlayer {
   id: number;
-  match_id: string;
   player_uuid: string;
   player_name: string;
-  team_name: string;
   class_name: string;
   kills: number;
   deaths: number;
@@ -83,11 +80,9 @@ export interface MatchPlayer {
   splash_heal: number;
 }
 
-export interface MatchEventData {
+export interface MatchEvent {
   id: number;
-  match_id: string;
   event_time: string;
-  event_type: string;
   actor_uuid: string | null;
   actor_name: string | null;
   target_uuid: string | null;
@@ -95,10 +90,10 @@ export interface MatchEventData {
   weapon: string | null;
 }
 
-export interface MatchDetail extends MatchSummary {
+interface MatchDetail extends MatchSummary {
   team1_players: MatchPlayer[];
   team2_players: MatchPlayer[];
-  events: MatchEventData[];
+  events: MatchEvent[];
 }
 
 export interface SessionKey {
@@ -108,8 +103,7 @@ export interface SessionKey {
   to: string;
 }
 
-// OpenNext's default incremental cache is a no-op on Cloudflare, so `revalidate`
-// does nothing there; use the Workers Cache API instead and fall back elsewhere.
+// `revalidate` is a no-op under OpenNext's default cache on Workers, so use the Workers Cache API.
 async function cachedFetch(url: string): Promise<Response> {
   const init = { headers: { "User-Agent": "kitmap-website" } }; // the API's WAF rejects UA-less requests
   const cache = (globalThis as unknown as { caches?: { default?: Cache } }).caches?.default;
@@ -129,9 +123,9 @@ async function cachedFetch(url: string): Promise<Response> {
 }
 
 export async function getSessions(
-  page = 1,
-  limit = 20,
-  search = "",
+  page: number,
+  limit: number,
+  search: string,
   key?: SessionKey,
 ): Promise<SessionListResponse> {
   const q = new URLSearchParams({ page: String(page), limit: String(limit) });
@@ -188,7 +182,6 @@ function formatShortDate(iso: string, locale: string) {
   });
 }
 
-/** "9/14 13:09 – 15:02", or with both dates when the range crosses midnight. */
 export function formatTimeRange(startIso: string, endIso: string, locale: string) {
   const start = new Date(startIso);
   const end = new Date(endIso);
@@ -199,6 +192,6 @@ export function formatTimeRange(startIso: string, endIso: string, locale: string
   return `${formatShortDate(startIso, locale)} – ${endLabel}`;
 }
 
-export function getHeadUrl(playerUuid: string, size = 64) {
-  return `https://api.mcheads.org/head/${encodeURIComponent(playerUuid.replace(/-/g, ""))}/${size}`;
+export function getHeadUrl(playerUuid: string) {
+  return `https://api.mcheads.org/head/${encodeURIComponent(playerUuid.replace(/-/g, ""))}/64`;
 }
