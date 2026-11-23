@@ -168,8 +168,14 @@ export function formatDuration(ms: number | string, t: (key: "hour" | "min" | "s
   return `${h ? h + t("hour") : ""}${m}${t("min")}${total % 60}${t("sec")}`;
 }
 
+// Korean pages borrow ja's date format: "11/22 20:20", not "11. 22. 오후 08:20".
+const dateLocale = (locale: string) => (locale === "ko" ? "ja" : locale);
+
 export function formatDate(iso: string, locale: string) {
-  return new Date(iso).toLocaleString(locale, { timeZone: SEOUL, timeZoneName: "short" });
+  return new Date(iso).toLocaleString(dateLocale(locale), {
+    timeZone: SEOUL,
+    timeZoneName: "short",
+  });
 }
 
 function formatShortDate(iso: string, locale: string) {
@@ -182,7 +188,8 @@ function formatShortDate(iso: string, locale: string) {
   });
 }
 
-export function formatTimeRange(startIso: string, endIso: string, locale: string) {
+export function formatTimeRange(startIso: string, endIso: string, pageLocale: string) {
+  const locale = dateLocale(pageLocale);
   const start = new Date(startIso);
   const end = new Date(endIso);
   const day = (d: Date) => d.toLocaleDateString(locale, { timeZone: SEOUL });

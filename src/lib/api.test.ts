@@ -1,6 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parsePage, parseSearch, parseSessionKey, MAX_PAGE } from "./api.ts";
+import {
+  parsePage,
+  parseSearch,
+  parseSessionKey,
+  formatDate,
+  formatTimeRange,
+  MAX_PAGE,
+} from "./api.ts";
 
 test("parsePage clamps to 1..MAX_PAGE and takes the first repeated value", () => {
   assert.equal(parsePage({}), 1);
@@ -26,4 +33,11 @@ test("parseSessionKey validates teams and time window, re-serializing to ISO", (
   assert.equal(parseSessionKey({ ...ok, team2: " " }), null);
   assert.equal(parseSessionKey({ ...ok, from: "nope" }), null);
   assert.equal(parseSessionKey({ ...ok, from: ok.to, to: ok.from }), null);
+});
+
+test("Korean pages show dates with slashes and a 24-hour clock, like Japanese", () => {
+  const start = "2026-11-22T11:20:00Z";
+  const end = "2026-11-22T13:08:00Z";
+  assert.equal(formatTimeRange(start, end, "ko"), "11/22 20:20 – 22:08");
+  assert.equal(formatDate(end, "ko"), "2026/11/22 22:08:00 GMT+9");
 });
