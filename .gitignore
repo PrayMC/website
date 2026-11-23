@@ -1,9 +1,7 @@
-# dependencies
 /node_modules
 package-lock.json
 yarn.lock
 
-# next.js / opennext / wrangler
 /.next/
 /out/
 /build
@@ -13,18 +11,14 @@ yarn.lock
 *.tsbuildinfo
 next-env.d.ts
 
-# testing
 /coverage
 
-# env and secrets
 .env*
 *.pem
 
-# debug
 npm-debug.log*
 .pnpm-debug.log*
 
-# editors and OS
 .vscode/
 .idea/
 *.iml
@@ -32,6 +26,5 @@ npm-debug.log*
 *~
 .DS_Store
 
-# local tool state
 /.impeccable
 /.codegraph

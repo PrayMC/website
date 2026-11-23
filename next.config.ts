@@ -1,4 +1,3 @@
-import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
 if (process.env.NODE_ENV === "production" && !process.env.NEXT_PUBLIC_API_URL) {
@@ -7,14 +6,15 @@ if (process.env.NODE_ENV === "production" && !process.env.NEXT_PUBLIC_API_URL) {
   );
 }
 
-const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+const withNextIntl = createNextIntlPlugin({
+  experimental: {
+    messages: { path: "./src/messages", format: "json", locales: "infer", precompile: true },
+  },
+});
 
-const nextConfig: NextConfig = {
+export default withNextIntl({
   agentRules: false,
   poweredByHeader: false,
-  experimental: {
-    agentUpgrade: "security",
-  },
   images: {
     unoptimized: true,
   },
@@ -38,6 +38,4 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-};
-
-export default withNextIntl(nextConfig);
+});
