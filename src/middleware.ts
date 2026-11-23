@@ -31,6 +31,7 @@ export default function middleware(request: NextRequest) {
   return response;
 }
 
+// OG images skip it: Next emits og:image as /ko/..., which as-needed would redirect to /...
 export const config = {
-  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
+  matcher: ["/((?!api|_next|_vercel|.*opengraph-image|.*\\..*).*)"],
 };

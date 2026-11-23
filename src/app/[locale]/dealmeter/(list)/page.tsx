@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { ChevronLeft, ChevronRight, Inbox, Search, SearchX, TriangleAlert } from "lucide-react";
-import { Link, redirect, localeAlternates, type Locale } from "@/i18n/routing";
+import { Link, redirect, getPathname, localeAlternates, type Locale } from "@/i18n/routing";
 import {
   getSessions,
   formatTimeRange,
@@ -71,7 +71,11 @@ export default async function DealMeterPage({ params, searchParams }: Props) {
     <Page>
       <h1 className="sr-only">{tn("matchHistory")}</h1>
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6 sm:mb-8">
-        <form action={`/${locale}/dealmeter`} method="get" className="flex-1 min-w-0">
+        <form
+          action={getPathname({ locale: locale as Locale, href: "/dealmeter" })}
+          method="get"
+          className="flex-1 min-w-0"
+        >
           <div className="relative max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
             <input
