@@ -13,6 +13,9 @@ export const { Link, usePathname, redirect } = createNavigation(routing);
 export const SITE_URL = "https://kitmap.planetearth.kr";
 export const DISCORD_INVITE = "https://discord.gg/aTCD3aXPND";
 
+export const ogLocale = (locale: string) =>
+  ({ ko: "ko_KR", en: "en_US", ja: "ja_JP" })[locale as Locale];
+
 export function localeAlternates(path: string, locale: string) {
   return {
     canonical: `${SITE_URL}/${locale}${path}`,

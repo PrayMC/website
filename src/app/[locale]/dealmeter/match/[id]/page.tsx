@@ -37,7 +37,7 @@ import {
   type MatchPlayer,
   type SearchParams,
 } from "@/lib/api";
-import { localeAlternates } from "@/i18n/routing";
+import { localeAlternates, ogLocale } from "@/i18n/routing";
 import {
   Page,
   StatusMessage,
@@ -84,7 +84,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description: t("description"),
     alternates: localeAlternates(`/dealmeter/match/${encodeURIComponent(match.id)}`, locale),
-    openGraph: { title },
+    openGraph: { title, locale: ogLocale(locale) },
   };
 }
 

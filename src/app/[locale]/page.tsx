@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowRight, ChartColumn, Globe } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Link, DISCORD_INVITE, localeAlternates } from "@/i18n/routing";
+import { Link, DISCORD_INVITE, localeAlternates, ogLocale } from "@/i18n/routing";
 import DiscordIcon from "../discord-icon";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -14,6 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: t("metaDescription"),
     alternates: localeAlternates("", locale),
     openGraph: {
+      locale: ogLocale(locale),
       images: [{ url: "/logo-lg.png", width: 576, height: 576, alt: "Pray" }],
     },
     twitter: {

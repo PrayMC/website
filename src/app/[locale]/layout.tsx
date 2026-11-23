@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
-import { routing, type Locale } from "@/i18n/routing";
+import { routing, ogLocale } from "@/i18n/routing";
 import Navbar from "../navbar";
 
 // The CSP nonce is per request, so prerendered HTML would carry a stale one.
@@ -12,9 +12,7 @@ type Props = { children: ReactNode; params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Pick<Props, "params">): Promise<Metadata> {
   const { locale } = await params;
-  return {
-    openGraph: { locale: { ko: "ko_KR", en: "en_US", ja: "ja_JP" }[locale as Locale] },
-  };
+  return { openGraph: { locale: ogLocale(locale) } };
 }
 
 export default async function LocaleLayout({ children, params }: Props) {

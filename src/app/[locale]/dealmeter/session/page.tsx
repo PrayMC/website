@@ -2,6 +2,7 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import { TriangleAlert, SearchX, FolderOpen, CalendarDays, Skull, Clock } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { ogLocale } from "@/i18n/routing";
 import {
   getSessions,
   parsePage,
@@ -49,14 +50,15 @@ function load(q: SearchParams) {
   return key && loadSession(key.team1, key.team2, key.from, key.to, parseSearch(q));
 }
 
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+  const { locale } = await params;
   const q = await searchParams; // outside the try: Next signals dynamic rendering by throwing
   const t = await getTranslations("dealmeter");
   try {
     const s = await load(q);
     if (!s) return noindex(t("seriesTitle"));
     const title = `Pray - ${s.team_a} vs ${s.team_b} (${s.team_a_wins}:${s.team_b_wins})`;
-    return { ...noindex(title), openGraph: { title } };
+    return { ...noindex(title), openGraph: { title, locale: ogLocale(locale) } };
   } catch {
     return noindex(t("seriesTitle"));
   }
