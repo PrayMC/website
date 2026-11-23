@@ -9,7 +9,7 @@
     "discordDesc": "コミュニティに参加",
     "planetearth": "PlanetEarth",
     "planetearthDesc": "公式サイト",
-    "metaDescription": "PlanetEarth KITMAP チーム Pray の公式サイト。マッチ履歴と戦闘統計を確認できます。"
+    "metaDescription": "MAKE THEM PRAY."
   },
   "notFound": {
     "title": "ページが見つかりません。",
@@ -40,7 +40,7 @@
     "killEvent": "{actor}が{target}を倒しました",
     "showMore": "もっと見る（残り{remaining}件）",
     "title": "Pray - マッチ履歴",
-    "description": "PlanetEarth KITMAP の戦闘記録と統計を確認できます。",
+    "description": "戦闘記録と統計を確認できます。",
     "seriesCount": "{count}戦",
     "totalKills": "合計キル",
     "seriesNotFound": "シリーズが見つかりません。",

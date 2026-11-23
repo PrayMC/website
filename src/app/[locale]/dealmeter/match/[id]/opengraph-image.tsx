@@ -37,6 +37,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   });
 
   return renderCard({
+    category: "KITMAP",
     corner: match.world_name ?? undefined,
     footer: `${formatDuration(match.duration_ms, (k) => ({ hour: "h ", min: "m ", sec: "s" })[k])} · ${ended} KST`,
     // "…" for the ellipsis on names too long even at the minimum size.

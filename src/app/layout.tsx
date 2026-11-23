@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Pray",
-  description: "Pray - PlanetEarth KITMAP",
+  description: "MAKE THEM PRAY.",
   icons: { icon: "/favicon.png" },
 };
 

@@ -9,7 +9,7 @@
     "discordDesc": "Join the community",
     "planetearth": "PlanetEarth",
     "planetearthDesc": "Official site",
-    "metaDescription": "Official site for PlanetEarth KITMAP team Pray. View match history and battle statistics."
+    "metaDescription": "MAKE THEM PRAY."
   },
   "notFound": {
     "title": "Page not found.",
@@ -40,7 +40,7 @@
     "killEvent": "{actor} killed {target}",
     "showMore": "Show more ({remaining} remaining)",
     "title": "Pray - Matches",
-    "description": "View PlanetEarth KITMAP battle records and statistics.",
+    "description": "View battle records and statistics.",
     "seriesCount": "{count, plural, one {# match} other {# matches}}",
     "totalKills": "Total kills",
     "seriesNotFound": "Series not found.",

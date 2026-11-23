@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations("home");
   return {
-    title: "Pray - PlanetEarth KITMAP",
+    title: "Pray",
     description: t("metaDescription"),
     alternates: localeAlternates("", locale),
   };
@@ -32,7 +32,7 @@ export default async function HomePage() {
           className="w-44 h-44 sm:w-72 sm:h-72 mb-8 text-transparent"
         />
         <h1 className="text-5xl sm:text-7xl font-black tracking-tight mb-6 text-brand">Pray</h1>
-        <p className="text-muted text-base">PlanetEarth KITMAP</p>
+        <p className="text-muted text-base">MAKE THEM PRAY.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-zinc-800 rounded-xl overflow-hidden">

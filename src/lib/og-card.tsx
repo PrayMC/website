@@ -24,15 +24,17 @@ const ROW = 64;
 export async function renderCard({
   body,
   text,
+  category,
   corner,
   footer,
 }: {
   body: ReactNode;
   text: string;
+  category?: string;
   corner?: string;
   footer?: string;
 }) {
-  const fonts = await loadFonts(`Pray · KITMAP${text}${corner ?? ""}${footer ?? ""}`);
+  const fonts = await loadFonts(`Pray · ${category ?? ""}${text}${corner ?? ""}${footer ?? ""}`);
   return new ImageResponse(
     <div
       style={{
@@ -58,7 +60,7 @@ export async function renderCard({
         <div style={{ display: "flex", alignItems: "center" }}>
           <img src={LOGO_SRC} width={60} height={60} alt="" style={{ marginRight: 16 }} />
           <span style={{ color: COLORS.brand, fontWeight: 800 }}>Pray</span>
-          <span style={{ color: COLORS.muted, marginLeft: 12 }}>· KITMAP</span>
+          {category && <span style={{ color: COLORS.muted, marginLeft: 12 }}>· {category}</span>}
         </div>
         {corner && <span style={{ color: COLORS.muted }}>{corner}</span>}
       </div>
@@ -79,4 +81,22 @@ export async function renderCard({
     </div>,
     { ...OG_SIZE, fonts: fonts.length ? fonts : undefined },
   );
+}
+
+export function brandCard(category?: string) {
+  return renderCard({
+    text: "MAKE THEM PRAY.",
+    category,
+    body: (
+      <div style={{ display: "flex", alignItems: "center", gap: 56 }}>
+        <img src={LOGO_SRC} width={220} height={220} alt="" />
+        <div style={{ display: "flex", flexDirection: "column", gap: 42 }}>
+          <span style={{ fontSize: 132, fontWeight: 800, color: COLORS.brand, lineHeight: 1 }}>
+            Pray
+          </span>
+          <span style={{ fontSize: 48, color: COLORS.muted }}>MAKE THEM PRAY.</span>
+        </div>
+      </div>
+    ),
+  });
 }
