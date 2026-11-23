@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import DiscordIcon from "../discord-icon";
-import { BarChart3, Globe } from "lucide-react";
+import { ArrowRight, BarChart3, Globe } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link, DISCORD_INVITE, localeAlternates } from "@/i18n/routing";
 
@@ -39,7 +39,7 @@ export default async function HomePage() {
     <main className="max-w-3xl mx-auto px-4 pt-20 sm:pt-28 pb-16">
       <div className="flex flex-col items-center text-center mb-16 sm:mb-20">
         <Image
-          src="/logo-lg.png"
+          src="/logo-lg.webp"
           alt="Pray"
           width={576}
           height={576}
@@ -47,7 +47,7 @@ export default async function HomePage() {
           priority
         />
         <h1 className="text-5xl sm:text-7xl font-black tracking-tight mb-6 text-brand">Pray</h1>
-        <p className="text-zinc-500 text-base">PlanetEarth KITMAP</p>
+        <p className="text-muted text-base">PlanetEarth KITMAP</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-zinc-800 rounded-xl overflow-hidden">
@@ -94,9 +94,9 @@ function NavCard({
       <div className="text-zinc-400">{icon}</div>
       <div className="min-w-0">
         <div className="text-sm font-semibold text-zinc-200">{title}</div>
-        <div className="text-xs text-zinc-500">{desc}</div>
+        <div className="text-xs text-muted">{desc}</div>
       </div>
-      <span className="ml-auto text-zinc-600 text-sm shrink-0">→</span>
+      <ArrowRight className="ml-auto w-4 h-4 shrink-0 text-zinc-500" aria-hidden />
     </div>
   );
 

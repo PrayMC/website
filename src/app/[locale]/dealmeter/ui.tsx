@@ -1,5 +1,12 @@
 import { Children, Fragment, type ReactNode } from "react";
-import { ArrowLeft, ChevronLeft, ChevronRight, Search, type LucideIcon } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  Trophy,
+  type LucideIcon,
+} from "lucide-react";
 import { Link } from "@/i18n/routing";
 import {
   getWinners,
@@ -54,11 +61,20 @@ export function BackLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-100 transition-colors"
+      className="inline-flex items-center gap-1.5 pointer-coarse:py-3 pointer-coarse:-my-3 text-sm text-zinc-400 hover:text-zinc-100 transition-colors"
     >
       <ArrowLeft className="w-4 h-4" aria-hidden />
       {label}
     </Link>
+  );
+}
+
+// Same inline-flex box as BackLink, so its row gets the same (strut-padded) line height.
+export function BackLinkSkeleton() {
+  return (
+    <span className="inline-flex items-center h-5">
+      <span className="h-4 w-16 bg-zinc-800 rounded" />
+    </span>
   );
 }
 
@@ -82,7 +98,7 @@ export function SearchForm({
           maxLength={MAX_QUERY_LENGTH}
           placeholder={placeholder}
           aria-label={placeholder}
-          className="w-full h-9 pl-9 pr-3 text-sm rounded-lg bg-transparent border border-zinc-800 text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus-visible:border-zinc-500 focus-visible:ring-1 focus-visible:ring-zinc-500 transition-colors"
+          className="w-full h-9 pointer-coarse:h-11 pl-9 pr-3 text-sm rounded-lg bg-transparent border border-zinc-800 text-zinc-200 placeholder:text-muted focus-visible:border-zinc-500 transition-colors"
         />
       </div>
     </form>
@@ -94,16 +110,20 @@ export function StatusBody({
   message,
   backLabel,
   backHref = "/dealmeter",
+  heading = false,
 }: {
   icon: LucideIcon;
   message: string;
   backLabel?: string;
   backHref?: string;
+  /** Set when the message is the whole page, so it becomes the page's h1. */
+  heading?: boolean;
 }) {
+  const Message = heading ? "h1" : "p";
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-zinc-500">
+    <div className="flex flex-col items-center justify-center py-24 text-muted">
       <Icon className="w-12 h-12 mb-4 text-zinc-700" />
-      <p className="text-base">{message}</p>
+      <Message className="text-base">{message}</Message>
       {backLabel && (
         <div className="mt-4">
           <BackLink href={backHref} label={backLabel} />
@@ -121,18 +141,18 @@ export function StatusMessage(props: {
 }) {
   return (
     <Page>
-      <StatusBody {...props} />
+      <StatusBody {...props} heading />
     </Page>
   );
 }
 
 // A draw keeps both sides at zinc-300 so neither looks like the loser.
 export const resultTone = (won: boolean, draw: boolean) =>
-  draw ? "text-zinc-300" : won ? "text-white" : "text-zinc-500";
+  draw ? "text-zinc-300" : won ? "text-white" : "text-muted";
 
 export function MetaRow({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 sm:gap-2.5 text-zinc-500 text-xs sm:text-sm tabular-nums tracking-wider mb-5 sm:mb-8">
+    <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 sm:gap-2.5 text-muted text-xs sm:text-sm tabular-nums tracking-wider mb-5 sm:mb-8">
       {Children.toArray(children).map((item, i) => (
         <Fragment key={i}>
           {i > 0 && (
@@ -201,8 +221,13 @@ function PaginationLink({
   children: ReactNode;
 }) {
   const cls =
-    "inline-flex items-center justify-center w-9 h-9 rounded-lg border border-zinc-800 text-zinc-400 transition-colors";
-  if (!href) return <span className={`${cls} opacity-30`}>{children}</span>;
+    "inline-flex items-center justify-center w-9 h-9 pointer-coarse:w-11 pointer-coarse:h-11 rounded-lg border border-zinc-800 text-zinc-400 transition-colors";
+  if (!href)
+    return (
+      <span className={`${cls} opacity-30`} aria-hidden>
+        {children}
+      </span>
+    );
   return (
     <Link
       href={href}
@@ -211,6 +236,27 @@ function PaginationLink({
     >
       {children}
     </Link>
+  );
+}
+
+export function WinnerMark({
+  label,
+  hero,
+  flip,
+}: {
+  label: string;
+  hero?: boolean;
+  flip?: boolean;
+}) {
+  return (
+    <span
+      className={`shrink-0 inline-flex items-center gap-1 sm:gap-2 font-black uppercase tracking-widest text-win ${
+        hero ? "text-xs sm:text-base" : "text-[10px]"
+      } ${flip ? "flex-row-reverse" : ""}`}
+    >
+      <span className={hero ? undefined : "sr-only"}>{label}</span>
+      <Trophy className={hero ? "w-4 h-4 sm:w-6 sm:h-6" : "w-3.5 h-3.5"} aria-hidden />
+    </span>
   );
 }
 
@@ -238,26 +284,28 @@ function Scoreboard({
     `min-w-0 truncate font-semibold ${large ? "text-base sm:text-lg" : "text-sm"} ${resultTone(won, drawn)}`;
   const score = (won: boolean) =>
     `font-bold tabular-nums leading-none ${large ? "text-4xl sm:text-5xl" : "text-2xl"} ${resultTone(won, drawn)}`;
-  const dot = (
-    <>
-      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" aria-hidden />
-      <span className="sr-only">{t("winner")}</span>
-    </>
-  );
+  const mark = <WinnerMark label={t("winner")} />;
+  // Under 20rem of its own width, one team per row: side by side, a name would get ~50px.
   return (
-    <div>
-      <div className="flex items-center gap-3 sm:gap-4">
-        <div className="flex-1 min-w-0 flex items-center justify-end gap-2">
+    <div className="@container">
+      <div className="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-2 @xs:flex @xs:gap-4">
+        <div className="min-w-0 @xs:flex-1 flex items-center @xs:justify-end gap-2">
           <span className={name(wonA)}>{teamA}</span>
-          {wonA && dot}
+          {wonA && mark}
         </div>
-        <div className="shrink-0 flex items-center gap-2">
-          <span className={score(wonA)}>{scoreA}</span>
-          <span className={`text-zinc-700 font-bold ${large ? "text-2xl" : "text-base"}`}>:</span>
-          <span className={score(wonB)}>{scoreB}</span>
+        <div className="contents @xs:flex @xs:shrink-0 @xs:items-center @xs:gap-2">
+          <span className={`text-right ${score(wonA)}`}>{scoreA}</span>
+          <span
+            className={`hidden @xs:inline text-muted font-bold ${large ? "text-2xl" : "text-base"}`}
+          >
+            :
+          </span>
+          <span className={`@max-xs:row-start-2 @max-xs:col-start-2 text-right ${score(wonB)}`}>
+            {scoreB}
+          </span>
         </div>
-        <div className="flex-1 min-w-0 flex items-center gap-2">
-          {wonB && dot}
+        <div className="@max-xs:row-start-2 @max-xs:col-start-1 min-w-0 @xs:flex-1 flex @max-xs:flex-row-reverse @max-xs:justify-end items-center gap-2">
+          {wonB && mark}
           <span className={name(wonB)}>{teamB}</span>
         </div>
       </div>
@@ -290,10 +338,38 @@ function Card({
           </span>
         )}
         {board}
-        <p className="mt-4 pt-3 border-t border-zinc-800/70 text-xs text-zinc-500 tabular-nums truncate">
+        <p className="mt-4 pt-3 border-t border-zinc-800/70 text-xs text-muted tabular-nums truncate">
           {footer}
         </p>
       </Link>
+    </div>
+  );
+}
+
+export function CardSkeleton() {
+  return (
+    <div className="pt-4 motion-safe:animate-pulse">
+      <div className="@container rounded-xl border border-zinc-800 bg-zinc-900 p-5 sm:p-6">
+        {/* Same 20rem switch as Scoreboard: stacked rows when narrow, one line when wide. */}
+        <div className="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-2 @xs:hidden">
+          <div className="h-4 w-20 bg-zinc-800 rounded" />
+          <div className="h-6 w-5 bg-zinc-800 rounded" />
+          <div className="h-4 w-16 bg-zinc-800 rounded" />
+          <div className="h-6 w-5 bg-zinc-800 rounded" />
+        </div>
+        <div className="hidden @xs:flex items-center gap-4">
+          <div className="flex-1 flex justify-end">
+            <div className="h-4 w-20 bg-zinc-800 rounded" />
+          </div>
+          <div className="h-6 w-14 bg-zinc-800 rounded" />
+          <div className="flex-1">
+            <div className="h-4 w-20 bg-zinc-800 rounded" />
+          </div>
+        </div>
+        <div className="mt-4 pt-3 border-t border-zinc-800/70">
+          <div className="h-3 my-0.5 w-28 bg-zinc-800 rounded" />
+        </div>
+      </div>
     </div>
   );
 }
@@ -303,24 +379,33 @@ export function MatchCard({
   locale,
   origin,
   t,
+  leftTeam,
 }: {
   match: MatchSummary;
   locale: string;
   origin: Origin;
   t: Translate;
+  /** In a series, the team to keep on the left so wins can be counted down a column. */
+  leftTeam?: string;
 }) {
   const { team1Won, team2Won } = getWinners(match);
+  const sides = [
+    { name: match.team1_name, kills: match.team1_kills, won: team1Won },
+    { name: match.team2_name, kills: match.team2_kills, won: team2Won },
+  ];
+  if (leftTeam && match.team2_name.toLowerCase() === leftTeam.toLowerCase()) sides.reverse();
+  const [a, b] = sides;
   return (
     <Card
       href={matchHref(match.id, origin)}
       board={
         <Scoreboard
-          teamA={match.team1_name}
-          teamB={match.team2_name}
-          scoreA={match.team1_kills}
-          scoreB={match.team2_kills}
-          wonA={team1Won}
-          wonB={team2Won}
+          teamA={a.name}
+          teamB={b.name}
+          scoreA={a.kills}
+          scoreB={b.kills}
+          wonA={a.won}
+          wonB={b.won}
           t={t}
         />
       }

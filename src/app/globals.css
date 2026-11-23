@@ -5,6 +5,12 @@
   --color-foreground: #ededed;
   --color-brand: #b9d9fb;
   --color-brand-hover: #d0e5fd;
+  /* Metadata and secondary text: the dimmest gray that still clears 4.5:1 on zinc-900 panels and timeline rows. */
+  --color-muted: oklch(64% 0.016 286);
+  /* Red and blue only ever mean team 1 and team 2; amber only marks the winner. */
+  --color-team-1: oklch(70.4% 0.191 22.216);
+  --color-team-2: oklch(70.7% 0.165 254.624);
+  --color-win: oklch(82.8% 0.189 84.429);
   --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
 }
@@ -18,18 +24,29 @@ body {
   font-family: var(--font-sans);
 }
 
+/* One focus ring for every control, in the brand color instead of the OS accent. Layered so utilities can adjust it. */
+@layer base {
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand;
+  }
+
+  ::selection {
+    @apply bg-brand/25;
+  }
+}
+
 @utility page-frame {
   @apply w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-10;
 }
 
 .pray-gradient-border {
-  background: linear-gradient(90deg, #b9d9fb, #d0c4f7);
+  @apply bg-linear-to-r from-brand to-[#d0c4f7];
 }
 
 @media (min-width: 640px) {
   * {
     scrollbar-width: thin;
-    scrollbar-color: #27272a transparent;
+    scrollbar-color: var(--color-zinc-800) transparent;
   }
 
   ::-webkit-scrollbar {
@@ -39,7 +56,7 @@ body {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #27272a;
+    background: var(--color-zinc-800);
     border-radius: 3px;
   }
 }

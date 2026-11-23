@@ -14,7 +14,7 @@ import {
   MatchCard,
   SessionCard,
   listHref,
-} from "./ui";
+} from "../ui";
 
 type Props = { params: Promise<{ locale: string }>; searchParams: Promise<SearchParams> };
 
@@ -55,9 +55,11 @@ export default async function DealMeterPage({ params, searchParams }: Props) {
   }
 
   const origin = { search, page };
+  const tn = await getTranslations("navbar");
 
   return (
     <Page>
+      <h1 className="sr-only">{tn("matchHistory")}</h1>
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6 sm:mb-8">
         <SearchForm
           action={`/${locale}/dealmeter`}
@@ -68,7 +70,12 @@ export default async function DealMeterPage({ params, searchParams }: Props) {
       </div>
 
       {data.sessions.length === 0 ? (
-        <StatusBody icon={SearchX} message={t("noResults")} />
+        <StatusBody
+          icon={SearchX}
+          message={t("noResults")}
+          backLabel={t("clearSearch")}
+          backHref={listHref("", 1)}
+        />
       ) : (
         <CardGrid>
           {data.sessions.map((session) =>

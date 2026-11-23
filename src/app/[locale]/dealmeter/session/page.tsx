@@ -113,6 +113,9 @@ export default async function SessionPage({
       </div>
 
       <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 sm:p-10 mb-8 sm:mb-10">
+        <h1 className="sr-only">
+          {session.team_a} vs {session.team_b}
+        </h1>
         <MetaRow>
           <MetaItem icon={FolderOpen}>{t("seriesCount", { count: session.match_count })}</MetaItem>
           <MetaItem icon={CalendarDays}>
@@ -134,6 +137,7 @@ export default async function SessionPage({
             locale={locale}
             origin={{ search, page, session: sessionKey(session) }}
             t={t}
+            leftTeam={session.team_a}
           />
         ))}
       </CardGrid>
