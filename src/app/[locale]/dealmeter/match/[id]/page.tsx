@@ -19,6 +19,7 @@ import {
   WandSparkles,
   Pickaxe,
   Ghost,
+  Crosshair,
   FlaskConical,
   MapIcon,
   User,
@@ -64,6 +65,7 @@ const CLASSES: Record<string, { color: string; icon: LucideIcon }> = {
   Mage: { color: "text-orange-400", icon: WandSparkles },
   Miner: { color: "text-stone-400", icon: Pickaxe },
   Ghost: { color: "text-zinc-400", icon: Ghost },
+  Hunter: { color: "text-teal-400", icon: Crosshair },
 };
 
 // Opaque so scrolled stats pass under it; the edge line only shows where the table can scroll.
